@@ -1,0 +1,23 @@
+.DS_Store
+Thumbs.db
+*.zip
+
+# Local environments and build artifacts
+.venv/
+.venv_build/
+venv/
+env/
+__pycache__/
+*.py[cod]
+
+# Jupyter runtime files
+.ipynb_checkpoints/
+
+# LaTeX build artifacts
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.toc

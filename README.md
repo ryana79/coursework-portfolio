@@ -1,0 +1,41 @@
+# Coursework Portfolio
+
+Selected coursework from Rutgers computer science classes, organized to highlight algorithmic reasoning, relational database design, SQL, data cleaning, and data science workflows.
+
+This repository intentionally includes curated student-authored work rather than complete course folders. Large course-provided materials, generated files, virtual environments, and duplicate project source trees are excluded.
+
+## Courses
+
+### Design & Analysis of Computer Algorithms
+
+LaTeX solutions for algorithm analysis assignments covering asymptotic bounds, algorithm design, greedy methods, divide-and-conquer reasoning, heaps, dynamic programming, and correctness/runtime analysis.
+
+- [Homework 1](design-analysis-algorithms/homework-01/solution.tex)
+- [Homework 2](design-analysis-algorithms/homework-02/solution.tex)
+- [Homework 3](design-analysis-algorithms/homework-03/solution.tex)
+
+### Principles of Information & Data Management
+
+Coursework focused on relational modeling, SQL queries, functional dependencies, normalization, BCNF decomposition, and database application design.
+
+- [Homework 1](principles-information-data-management/homework-01/solution.html)
+- [Homework 3](principles-information-data-management/homework-03/queries.sql)
+- [Homework 4](principles-information-data-management/homework-04/normalization.txt)
+- [Final project repository](principles-information-data-management/project-link.md)
+
+### Data Management for Data Science
+
+Python and notebook-based coursework covering log processing, data cleaning, structured records, exploratory workflows, and data science project organization.
+
+- [Assignment 1: Log Processing](data-management-data-science/assignment-01/log-processing.ipynb)
+- [Recitation 1: Python Basics](data-management-data-science/recitation-01/python-basics.ipynb)
+- [Course project repository](data-management-data-science/project-link.md)
+
+## Highlighted Projects
+
+- [Online Travel Reservation System](https://github.com/ryana79/online-travel-reservation-system) - Java Swing and MySQL database application for travel reservations.
+- [CS 210 Stock Project](https://github.com/ryana79/cs210-stock-project) - End-to-end stock market data pipeline with SQLite, EDA, validation, and machine learning.
+
+## Notes
+
+Some assignments include original prompts or starter notebook text because they are embedded in the submitted files. The selected files are included to demonstrate completed technical work and learning outcomes.

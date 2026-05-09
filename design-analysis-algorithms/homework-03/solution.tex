@@ -1,0 +1,243 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref, amsmath,amsthm,amssymb,amsfonts}
+\usepackage{setspace}
+\usepackage{enumitem}
+\setstretch{1.15}
+
+\newcommand{\true}{\texttt{TRUE}}
+\newcommand{\false}{\texttt{FALSE}}
+
+\usepackage{hyperref}\hypersetup{colorlinks=true,linkcolor=black,citecolor=blue,urlcolor=blue}
+
+
+
+\title{CS 344: Design and Analysis of Computer Algorithms\\
+Homework 3}
+\author{Sections 05, 06, 07, and 08\\
+\underline{Instructor}: Daniel Schoepflin\\
+(\url{ds2196@rutgers.edu})}
+\date{}
+
+\begin{document}
+
+\maketitle
+{\centering   {\bf Due Date}: {\it 11:59 PM, April 16, 2026}
+
+
+}
+
+\paragraph{Instructions:} For the homework, you may utilize any outside resources in completing the solutions, but \textbf{copying is not permitted}.  In other words, your submission must be in your own words.  Moreover, you must cite any outside resource you use in your homework.
+
+\paragraph{Format:} Homeworks will be released on Canvas and should also be turned in on Canvas in the Gradescope as a {\bf single pdf file} containing the solutions in order. You must typeset your homework using 
+\LaTeX.   
+
+You can download \LaTeX\ for free here: \url{https://www.latex-project.org/get/}. For the purpose of this course, you do not even need to install \LaTeX\ and 
+can instead use an online \LaTeX\ editor such as Overleaf (\url{https://www.overleaf.com}.
+Two great introductory resources for  \LaTeX\ are \url{https://www.tug.org/begin.html}  and \url{http://joshua.smcvt.edu/proofs/tutorial.pdf}. 
+You can also use the wonderful tool Detexify (\url{http://detexify.kirelabs.org/classify.html})  for finding the
+ \LaTeX\ commands of a symbol (just draw the symbol!).  
+If you are interested in learning more about \LaTeX\ (beyond what is needed for this course), check the Wikibook on \LaTeX\ (\url{https://en.wikibooks.org/wiki/LaTeX}). 
+The course staff are also available to help you with any question you may have in using \LaTeX.
+
+
+
+\paragraph{Late homeworks:} You are not allowed to submit homeworks late.  If the homework is submitted late you will receive {\bf zero points}. 
+\clearpage
+
+
+\paragraph{Problem 1.} The first problem(s) is a variant of our number pyramid problem: We are given an $n \times n$ matrix, where each entry $a_{ij}$ is an integer (note that $a_{ij}$ can be non-positive).  We start from the top left corner of the matrix and in each step we move one square either downward or to the right.  We end when we reach the bottom right corner.  We aim to maximize the sum of the numbers that we have visited.  
+\begin{enumerate}
+    \item Give a dynamic programming algorithm (hint $O(n^2)$ space and time suffices) for the problem of finding the maximum sum \emph{and} reconstructing the path.
+
+    \item Now suppose that we repeat the process twice.  In other words, when you reach the bottom right of the matrix, you teleport back to the top left and repeat.  The catch is that each number on your two paths are counted \emph{only once} even if you pass through the same $a_{ij}$ twice.  Give a dynamic programming algorithm for the problem of finding the maximum sum (hint $O(n^3)$ space and time suffices).
+    
+\end{enumerate}
+
+\paragraph{Solution to 1(a).}
+
+We build an $n \times n$ table $\text{dp}[i][j]$ that stores the maximum sum achievable on any path from $(1,1)$ to $(i,j)$.
+
+\textbf{Recurrence.}
+\[
+\text{dp}[i][j] = a_{ij} + 
+\begin{cases}
+0 & \text{if } i = 1 \text{ and } j = 1,\\
+\text{dp}[i-1][j] & \text{if } j = 1 \text{ (first column, can only come from above)},\\
+\text{dp}[i][j-1] & \text{if } i = 1 \text{ (first row, can only come from left)},\\
+\max(\text{dp}[i-1][j],\; \text{dp}[i][j-1]) & \text{otherwise.}
+\end{cases}
+\]
+Fill the table row by row, left to right.  The answer is $\text{dp}[n][n]$.
+
+\textbf{Path reconstruction.}  Start at $(n,n)$ and trace back:
+\begin{enumerate}
+\item Set $i = n$, $j = n$.  Initialize an empty path list and append $(n,n)$.
+\item While $(i,j) \neq (1,1)$:
+\begin{itemize}
+    \item If $i = 1$, move left: $j \leftarrow j-1$.
+    \item Else if $j = 1$, move up: $i \leftarrow i-1$.
+    \item Else if $\text{dp}[i-1][j] \geq \text{dp}[i][j-1]$, move up: $i \leftarrow i-1$.
+    \item Else move left: $j \leftarrow j-1$.
+\end{itemize}
+Append the new $(i,j)$ to the path.
+\item Reverse the path list.
+\end{enumerate}
+
+\textbf{Correctness.}  Any path from $(1,1)$ to $(i,j)$ must arrive from either $(i-1,j)$ or $(i,j-1)$ (these are the only legal moves).  So the best path to $(i,j)$ extends the better of those two, plus picks up $a_{ij}$.  The base cases handle cells along the top row and left column where only one direction is possible.  The traceback follows these decisions in reverse to recover the actual path.
+
+\textbf{Running time.}  We fill $n^2$ cells, each in $O(1)$ time, and the traceback visits at most $2n - 2$ cells.  Total: $O(n^2)$ time, $O(n^2)$ space.
+
+\paragraph{Solution to 1(b).}
+
+The trick is to run both paths simultaneously.  Since both paths start at $(1,1)$ and end at $(n,n)$, and each path takes exactly $2(n-1)$ steps, we can synchronize them by step count.
+
+After $t$ steps ($t = 0, 1, \ldots, 2n-2$), path~1 is at row $r_1$ and column $c_1 = t + 2 - r_1$, and path~2 is at row $r_2$ and column $c_2 = t + 2 - r_2$.  (Here rows and columns are 1-indexed.)
+
+\textbf{State.}  Define $\text{dp}[t][r_1][r_2]$ = maximum total sum collected by both paths when each has taken $t$ steps and path~1 is at row $r_1$, path~2 at row $r_2$.
+
+\textbf{Base case.}  $\text{dp}[0][1][1] = a_{1,1}$ (both paths start at $(1,1)$, value counted once).
+
+\textbf{Transition.}  Going from step $t$ to $t+1$, each path moves right (row stays) or down (row increases by 1).  So $r_1' \in \{r_1, r_1 + 1\}$ and $r_2' \in \{r_2, r_2 + 1\}$.  The gain at the new positions is:
+\[
+\text{gain} = 
+\begin{cases}
+a_{r_1',\, t+3-r_1'} & \text{if } r_1' = r_2' \text{ (same cell, count once)},\\
+a_{r_1',\, t+3-r_1'} + a_{r_2',\, t+3-r_2'} & \text{if } r_1' \neq r_2'.
+\end{cases}
+\]
+We take
+\[
+\text{dp}[t+1][r_1'][r_2'] = \max\bigl(\text{dp}[t+1][r_1'][r_2'],\; \text{dp}[t][r_1][r_2] + \text{gain}\bigr)
+\]
+over all valid predecessor states.
+
+The answer is $\text{dp}[2n-2][n][n]$.
+
+\textbf{Why duplicates are handled correctly.}  Any cell $(i,j)$ is always reached at step $t = i + j - 2$.  So if both paths ever visit the same cell, they visit it at the same step.  At that step we have $r_1 = r_2$, and we only count $a_{ij}$ once.  Cells visited at different steps are necessarily different cells, so there is no issue.
+
+\textbf{Running time.}  The parameter $t$ takes $O(n)$ values.  For each $t$, both $r_1$ and $r_2$ take at most $n$ values each, giving $O(n^2)$ states per step.  Each state considers 4 transitions in $O(1)$.  So the total time is $O(n^3)$.  Space is also $O(n^3)$ (or $O(n^2)$ if we only keep two consecutive layers of $t$).
+
+
+\paragraph{Problem 2.} The second problem is a variant of our longest common subsequence problem:  We are given two sequences of integers $a = (a_1,a_2,a_3,\dots,a_n)$ and $b = (b_1,b_2,b_3,\dots,b_n)$.  Among their common subsequences, find the one with the maximum sum.  Your algorithm should be as efficient as possible.
+
+\paragraph{Solution.}
+
+This is like LCS, except instead of maximizing length we want to maximize the sum of the matched values.
+
+Define $\text{dp}[i][j]$ = maximum sum of any common subsequence of $a_1, \ldots, a_i$ and $b_1, \ldots, b_j$.
+
+\textbf{Base case.}  $\text{dp}[0][j] = 0$ for all $j$, and $\text{dp}[i][0] = 0$ for all $i$.  (The empty subsequence has sum 0.)
+
+\textbf{Recurrence.}  For $1 \leq i, j \leq n$:
+\[
+\text{dp}[i][j] = 
+\begin{cases}
+\max\!\big(\text{dp}[i-1][j],\; \text{dp}[i][j-1],\; \text{dp}[i-1][j-1] + a_i\big) & \text{if } a_i = b_j,\\[4pt]
+\max\!\big(\text{dp}[i-1][j],\; \text{dp}[i][j-1]\big) & \text{if } a_i \neq b_j.
+\end{cases}
+\]
+
+The answer is $\text{dp}[n][n]$.
+
+\textbf{Correctness.}  At each cell $(i,j)$ we decide whether to match $a_i$ with $b_j$ (only possible when they are equal) or skip one of them.  If we match, we add $a_i$ to the best we could do with the remaining prefixes $a_1,\ldots,a_{i-1}$ and $b_1,\ldots,b_{j-1}$.  If we skip $a_i$ or $b_j$, we inherit the best from a shorter prefix.  The base case (empty sequence, sum 0) is correct since the empty subsequence is always an option.
+
+Note that even if $a_i = b_j$ and $a_i < 0$, we never include it when it would hurt us: the max over all three choices ensures we only match when doing so actually improves the sum.
+
+\textbf{Running time.}  We fill an $n \times n$ table, each entry in $O(1)$.  So the algorithm runs in $O(n^2)$ time with $O(n^2)$ space.  This matches the LCS lower bound on this type of problem, so it is essentially optimal.
+
+
+\paragraph{Problem 3.} Consider the following problem:  You have a set $S$ of $n$ pairs $(a_1,b_1),(a_2,b_2),\dots,(a_n,b_n)$ and a max target $T$.  A subset $S' \subseteq S$ is \emph{b-good} if and only if $\sum_{i \in S'}{b_i} \leq T$.  Give an algorithm for finding the b-good subset $S^*$ of maximum $\sum_{i \in S^*}{a_i}$.  Your algorithm should be as efficient as possible 
+
+\paragraph{Solution.}
+
+This is the 0/1 knapsack problem: each pair $(a_i, b_i)$ is an item with value $a_i$ and weight $b_i$, and the capacity is $T$.  (We assume $b_i$ and $T$ are non-negative integers.)
+
+\textbf{Algorithm.}
+
+Build a table $\text{dp}[i][w]$ for $0 \leq i \leq n$ and $0 \leq w \leq T$, where $\text{dp}[i][w]$ is the maximum $a$-value achievable using a subset of items $\{1,\ldots,i\}$ whose total $b$-weight is at most $w$.
+
+\begin{enumerate}
+\item Set $\text{dp}[0][w] = 0$ for all $0 \leq w \leq T$.
+\item For $i = 1$ to $n$:
+\begin{itemize}
+    \item For $w = 0$ to $T$:
+    \begin{itemize}
+        \item If $b_i > w$: $\text{dp}[i][w] = \text{dp}[i-1][w]$ (item $i$ too heavy).
+        \item Else: $\text{dp}[i][w] = \max(\text{dp}[i-1][w],\; \text{dp}[i-1][w - b_i] + a_i)$.
+    \end{itemize}
+\end{itemize}
+\item The optimal value is $\text{dp}[n][T]$.
+\end{enumerate}
+
+\textbf{Subset reconstruction.}  Trace back through the table:
+\begin{enumerate}
+\item Set $w = T$, $S^* = \emptyset$.
+\item For $i = n$ down to $1$:
+\begin{itemize}
+    \item If $\text{dp}[i][w] \neq \text{dp}[i-1][w]$, then item $i$ was included: add $i$ to $S^*$ and set $w \leftarrow w - b_i$.
+\end{itemize}
+\item Output $S^*$.
+\end{enumerate}
+
+\textbf{Correctness.}  For each item $i$, we either take it (if we can afford the weight and it improves the sum) or leave it.  The recurrence considers both options and picks the better one.  The base case says that with no items, the best sum is 0 regardless of capacity.  So $\text{dp}[n][T]$ gives the maximum $a$-sum among all b-good subsets, and the traceback recovers which items were chosen.
+
+\textbf{Running time.}  The table has $(n+1)(T+1)$ entries, each computed in $O(1)$.  Traceback is $O(n)$.  Total time: $O(nT)$.  Space: $O(nT)$.
+
+Since 0/1 knapsack is NP-hard in general, there is no known polynomial-time algorithm for it.  The $O(nT)$ algorithm is pseudo-polynomial and is the best we can do with DP on the weight.
+
+
+
+\paragraph{Problem 4.}  You are given a set of $n$ distinct points $(x_i,y_i)$ in the 2-D Euclidean plane.  Give an algorithm with \emph{expected} running time as small as possible for counting the number of axis-parallel rectangles that can be made using these points.  A rectangle is axis-parallel if all of its sides are parallel to the x-axis or y-axis.  Hint:  Suppose you are told that four points form an axis-parallel rectangle -- $w$ is the top-left, $x$ is the top-right, $y$ is the bottom-right, and $z$ is the bottom-left.  An oracle will tell you the coordinates of these points when asked.  What is the smallest number of questions you can ask the oracle to uniquely determine the rectangle (i.e., what is the fewest number points whose coordinates you need to know to uniquely pin-down the other points' coordinates)?
+
+Follow-up:  What if we only want to count \emph{all} rectangles?  Hint:  Under what conditions do two line intersecting line segments form the diagonals of a rectangle?
+
+\paragraph{Solution.}
+
+\textbf{Oracle observation.}  An axis-parallel rectangle is determined by four values: $x_1 < x_2$ (left/right) and $y_1 < y_2$ (bottom/top).  Knowing any two \emph{diagonally opposite} corners, say $(x_1, y_1)$ and $(x_2, y_2)$, uniquely pins down the other two corners as $(x_1, y_2)$ and $(x_2, y_1)$.  One corner alone gives only 2 of the 4 values, so it is not enough.  Two corners on the same side (e.g.\ $(x_1, y_1)$ and $(x_2, y_1)$) share a coordinate, leaving one value unknown.  So the answer is \textbf{2} questions (and they must be diagonally opposite corners).
+
+This suggests an algorithm that iterates over pairs of points and checks whether they are diagonal corners of a rectangle.
+
+\textbf{Algorithm.}
+\begin{enumerate}
+\item Insert all $n$ points into a hash set $H$.
+\item Set $\text{count} = 0$.
+\item For each pair of distinct points $p_i = (x_1, y_1)$ and $p_j = (x_2, y_2)$ with $i < j$:
+\begin{itemize}
+    \item If $x_1 = x_2$ or $y_1 = y_2$, skip (they share a coordinate, so they lie on the same side rather than a diagonal).
+    \item Check whether $(x_1, y_2) \in H$ and $(x_2, y_1) \in H$.
+    \item If both are present, increment count.
+\end{itemize}
+\item Return $\text{count}\, / \, 2$.
+\end{enumerate}
+
+\textbf{Why divide by 2.}  Each axis-parallel rectangle has exactly 2 diagonals.  Both diagonal pairs are enumerated as unordered pairs in Step~3, so each rectangle gets counted twice.
+
+\textbf{Correctness.}  We check every possible pair of diagonal corners.  If all four corners exist, we detect the rectangle.  Every axis-parallel rectangle is found this way (it has a diagonal pair in our enumeration), and the division by 2 removes the double-counting.
+
+\textbf{Running time.}  We enumerate $\binom{n}{2} = O(n^2)$ pairs.  Each hash lookup is $O(1)$ expected time.  So the total expected running time is $O(n^2)$.  Space is $O(n)$ for the hash set.
+
+This is essentially optimal: in the worst case (e.g.\ $n$ points on a $\sqrt{n} \times \sqrt{n}$ grid), there can be $\Theta(n^2)$ rectangles, so any correct algorithm needs at least $\Omega(n^2)$ time.
+
+\bigskip
+\textbf{Follow-up: counting all rectangles (any orientation).}
+
+Two line segments are the diagonals of a rectangle if and only if they bisect each other (same midpoint) and have the same length.  This is because if two segments bisect each other, the four endpoints form a parallelogram, and if the diagonals also have equal length, that parallelogram is a rectangle.
+
+This gives us a clean way to count all rectangles:
+
+\begin{enumerate}
+\item For each unordered pair of points $\{p_i, p_j\}$, compute:
+\begin{itemize}
+    \item midpoint: $m = (x_i + x_j,\; y_i + y_j)$ (store the sum to avoid fractions),
+    \item squared distance: $d = (x_j - x_i)^2 + (y_j - y_i)^2$.
+\end{itemize}
+\item Use a hash map to group pairs by the key $(m, d)$.
+\item For each group of size $k$, any two pairs in the group form the diagonals of a rectangle.  So add $\binom{k}{2} = k(k-1)/2$ to the total count.
+\end{enumerate}
+
+\textbf{Correctness.}  Two pairs from the same group share the same midpoint and diagonal length, so their four endpoints form a rectangle.  Conversely, every rectangle's two diagonals land in the same group.  Each rectangle is counted exactly once (it corresponds to choosing 2 of the diagonals in its group, and it has exactly 2 diagonals, so it appears in exactly one $\binom{k}{2}$ term).
+
+\textbf{Running time.}  There are $O(n^2)$ pairs, each processed in $O(1)$ expected time (hashing).  Summing over groups is at most $O(n^2)$.  Total expected time: $O(n^2)$.  Space: $O(n^2)$ for the hash map.
+\end{document}

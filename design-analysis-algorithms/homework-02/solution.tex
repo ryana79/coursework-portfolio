@@ -1,0 +1,228 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref, amsmath,amsthm,amssymb,amsfonts}
+\usepackage{setspace}
+\usepackage{enumitem}
+\setstretch{1.15}
+
+\newcommand{\true}{\texttt{TRUE}}
+\newcommand{\false}{\texttt{FALSE}}
+
+\usepackage{hyperref}\hypersetup{colorlinks=true,linkcolor=black,citecolor=blue,urlcolor=blue}
+
+
+
+\title{CS 344: Design and Analysis of Computer Algorithms\\
+Homework 2}
+\author{Sections 05, 06, 07, and 08\\
+\underline{Instructor}: Daniel Schoepflin\\
+(\url{ds2196@rutgers.edu})}
+\date{}
+
+\begin{document}
+
+\maketitle
+{\centering   {\bf Due Date}: {\it 11:59 PM, March 9, 2026}
+
+
+}
+
+\paragraph{Instructions:} For the homework, you may utilize any outside resources in completing the solutions, but \textbf{copying is not permitted}.  In other words, your submission must be in your own words.  Moreover, you must cite any outside resource you use in your homework.
+
+\paragraph{Format:} Homeworks will be released on Canvas and should also be turned in on Canvas in the Gradescope as a {\bf single pdf file} containing the solutions in order. You must typeset your homework using 
+\LaTeX.   
+
+You can download \LaTeX\ for free here: \url{https://www.latex-project.org/get/}. For the purpose of this course, you do not even need to install \LaTeX\ and 
+can instead use an online \LaTeX\ editor such as Overleaf (\url{https://www.overleaf.com}.
+Two great introductory resources for  \LaTeX\ are \url{https://www.tug.org/begin.html}  and \url{http://joshua.smcvt.edu/proofs/tutorial.pdf}. 
+You can also use the wonderful tool Detexify (\url{http://detexify.kirelabs.org/classify.html})  for finding the
+ \LaTeX\ commands of a symbol (just draw the symbol!).  
+If you are interested in learning more about \LaTeX\ (beyond what is needed for this course), check the Wikibook on \LaTeX\ (\url{https://en.wikibooks.org/wiki/LaTeX}). 
+The course staff are also available to help you with any question you may have in using \LaTeX.
+
+
+
+\paragraph{Late homeworks:} You are not allowed to submit homeworks late.  If the homework is submitted late you will receive {\bf zero points}. 
+\clearpage
+
+
+\paragraph{Problem 1.} In a particular network, all endpoint users are located along a common cable.  We model this as each user $i$ sitting at some rational number $r_i$ on a range $[0,\ell]$.  We want to locate a server at some point along the range $[0,\ell]$ such that the sum of the distances from each user to the server is minimized.  Provide an algorithm which given an (unsorted) array $A$ of length $n$ comprising the locations of $n$ users outputs an optimal location for the server.  You may assume that any operation taking constant time on an integer also takes constant time on the rational numbers in the input.
+
+\paragraph{Solution.} Let the user locations in sorted order be
+\[
+x_1 \le x_2 \le \cdots \le x_n.
+\]
+We want to minimize
+\[
+f(s)=\sum_{i=1}^n |x_i-s|.
+\]
+The best place to put the server is at a median of the user locations.
+
+So the algorithm is:
+\begin{enumerate}
+\item Use a linear-time selection algorithm to find the $\lceil n/2\rceil$th smallest element of $A$.
+\item Output that value.
+\end{enumerate}
+
+If $n$ is odd, this is the middle value.  If $n$ is even, anything between the two middle values works, so just returning either middle value is fine.
+
+\textbf{Correctness.} If the server is placed to the left of the median, then moving it a little to the right helps at least as many users as it hurts, so the total distance does not go up.  Similarly, if the server is to the right of the median, moving it left does not make things worse.  So the minimum happens at a median, and the algorithm returns an optimal location.
+
+\textbf{Running time.} Linear-time selection runs in $O(n)$ time, so the algorithm runs in $O(n)$ time.
+
+\paragraph{Problem 2.} You have a flashlight and a pile of $n$ batteries each of which is labeled with its total starting battery life which is an integer number of minutes.  In order to operate, the flashlight requires two batteries at a time.  You come up with the following scheme to power the flashlight:  if there are at least two batteries with remaining power, you'll pick the two with the most power left and run the flashlight until one or both batteries run out of life.  If exactly of the batteries runs out of life, you'll return the other to the pile.  Design an algorithm which given an (unsorted) list $A$ of length $n$ where each $A[i]$ is the initial battery life of battery $i$ outputs the total amount of time you can operate the flashlight and the remaining battery life of any batteries (if any).
+
+\paragraph{Solution.} A max-heap works well here, since at every step we need the two batteries with the most life left.
+
+\textbf{Algorithm.}
+\begin{enumerate}
+\item Build a max-heap $H$ from the values in $A$.
+\item Set $\textit{time}=0$.
+\item While $H$ contains at least two elements:
+\begin{enumerate}[label=\alph*)]
+\item Extract the two largest values $x$ and $y$, where $x\ge y$.
+\item Run the flashlight for $y$ minutes.
+\item Update $\textit{time}\leftarrow \textit{time}+y$.
+\item The battery with life $y$ is exhausted; the other battery now has life $x-y$.
+\item If $x-y>0$, insert $x-y$ back into $H$.
+\end{enumerate}
+\item If the heap is empty, output $\textit{time}$ and report that no battery life remains.
+\item Otherwise one battery remains in the heap with life $r$; output $\textit{time}$ and $r$.
+\end{enumerate}
+
+\textbf{Correctness.} Each loop is doing exactly what the problem says to do.  We take the two biggest remaining battery lives, use them until the smaller one dies, add that amount to the total time, and if the bigger one still has power left we put it back.  So after every step, the heap matches the real set of remaining battery lives.  Once fewer than two batteries are left, the flashlight cannot keep running, so the answer is correct.
+
+\textbf{Running time.} Building the heap takes $O(n)$ time.  Each iteration performs two extract-max operations and at most one insertion, each in $O(\log n)$ time.  Since each iteration permanently removes at least one battery, there are at most $n-1$ iterations.  Thus the total running time is $O(n\log n)$.
+
+\paragraph{Problem 3.} Let $A$ be an array of $n$ distinct numbers. If $i < j$ and $A[i]  > A[j]$, then we say that the pair 
+pair $(i,j)$ is an \emph{inversion} in $A$.  Suppose that we take $A$ and permute it uniformly at random. Calculate the expected number of inversions in $A$.
+
+\paragraph{Solution.} For each pair $(i,j)$ with $i<j$, define
+\[
+X_{ij}=
+\begin{cases}
+1 & \text{if $(i,j)$ is an inversion,}\\
+0 & \text{otherwise.}
+\end{cases}
+\]
+Let $X$ be the total number of inversions.  Then
+\[
+X=\sum_{1\le i<j\le n} X_{ij}.
+\]
+
+For any fixed pair $(i,j)$, after a random permutation, the two values are equally likely to appear in either order.  So
+\[
+\Pr[X_{ij}=1]=\frac12,
+\qquad\text{so}\qquad
+\mathbb{E}[X_{ij}]=\frac12.
+\]
+Now use linearity of expectation:
+\[
+\mathbb{E}[X]
+=\sum_{1\le i<j\le n}\mathbb{E}[X_{ij}]
+=\sum_{1\le i<j\le n}\frac12
+=\binom{n}{2}\cdot \frac12
+=\frac{n(n-1)}{4}.
+\]
+So the expected number of inversions is
+\[
+\boxed{\frac{n(n-1)}{4}}.
+\]
+
+\paragraph{Problem 4.}  Consider the following server synchronization problem. There are $n$ servers, each having access to unique internal data. The servers need to synchronize so each server has access to the internal data from the rest $n-1$. The servers can achieve this by a two-way transmission where two servers exchange their internal data in addition to any other data obtained so far. 
+Our goal is to describe a transmission protocol that ensures all servers have access to the internal data of every other server using as few transmissions as possible.
+
+
+For example, assume we have three servers $A,B,C$ and corresponding internal data $D_A,D_B,D_C$. We describe a protocol that uses at most $3$ transmissions.
+
+
+\begin{enumerate}
+\item Servers $A$ and $B$ exchange data. Servers $A$ and $B$ have access to $D_A,D_B$ and server $C$ has access to $D_C$
+\item Servers $A$ and $C$ exchange data. Servers $A$ and $C$  have access to $D_A,D_B,D_C$  and server $B$ has access to $D_A,D_B$
+\item Servers $A$ and $B$ exchange data again. All servers have access to $D_A,D_B,D_C$. 
+\end{enumerate}  
+
+
+Describe a single protocol for $n\geq 4$ servers that ensures that all servers end up with all internal data and uses at most $2n-4$ transmissions.
+
+
+
+
+
+
+\begin{itemize}
+\item Show that for $n=4$ we need $4$ transmissions. 
+\item Prove by induction on $n$ that your protocol uses no more than $2n-4$ transmissions
+
+
+\end{itemize}
+
+\paragraph{Solution.} Label the servers $1,2,\dots,n$.
+
+\textbf{Protocol for $n\ge 4$.}
+\begin{enumerate}
+\item For $i=2,3,\dots,n-2$, have server $1$ exchange data with server $i$.
+\item Have server $n-1$ exchange data with server $n$.
+\item Have server $1$ exchange data with server $n-1$.
+\item For $i=2,3,\dots,n-3$, have server $1$ exchange data with server $i$ again.
+\item Have server $n-2$ exchange data with server $n$.
+\end{enumerate}
+
+When $n=4$, the range in Step 4 is empty, so that step just does nothing.
+
+\textbf{Why this works.}
+\begin{itemize}
+\item After Step 1, server $1$ knows $D_1,D_2,\dots,D_{n-2}$.  Also, server $n-2$ knows all of this too, because it is the last one to talk to server $1$ in that step.
+\item After Step 2, servers $n-1$ and $n$ know $D_{n-1}$ and $D_n$.
+\item After Step 3, server $1$ and server $n-1$ both know all $n$ pieces of data.
+\item In Step 4, servers $2,3,\dots,n-3$ each talk to server $1$ again, so they all learn everything.
+\item The only servers that may still be missing something are $n-2$ and $n$.  But server $n-2$ has $D_1,\dots,D_{n-2}$ and server $n$ has $D_{n-1},D_n$, so after Step 5 they both know everything.
+\end{itemize}
+So in the end every server has all the data.
+
+\textbf{Why $n=4$ requires $4$ transmissions.} If we only had $3$ transmissions, then the communication graph on the $4$ servers would be a tree.  A tree on $4$ vertices has at least two leaves, and each leaf is involved in only one transmission.  Say those leaves are $u$ and $v$, and $u$ makes its only call before $v$ does.  After that, there is no way for $v$'s data to ever reach $u$.  So $u$ cannot end up with all the data, which is a contradiction.  Therefore $3$ transmissions are not enough, so we need at least $4$.
+
+For $n=4$, the protocol above becomes
+\[
+(1,2),\ (3,4),\ (1,3),\ (2,4),
+\]
+which uses exactly $4$ transmissions.
+
+\textbf{Induction on the number of transmissions.} Let $T(n)$ be the number of transmissions used by this protocol.
+
+\emph{Base case:} For $n=4$,
+\[
+T(4)=4=2\cdot 4-4.
+\]
+
+\emph{Inductive step:} Assume that for some $n\ge 4$,
+\[
+T(n)=2n-4.
+\]
+When we go from $n$ servers to $n+1$ servers, Step 1 gets one extra transmission and Step 4 also gets one extra transmission.  The other three steps still contribute one transmission each, so
+\[
+T(n+1)=T(n)+2=(2n-4)+2=2(n+1)-4.
+\]
+So by induction, this protocol uses exactly $2n-4$ transmissions, and therefore in particular it uses at most $2n-4$ transmissions, for every $n\ge 4$.
+
+\paragraph{Problem 5.}  Show how to sort $n$ numbers in the range $0$ to $n^3 -1$ in $O(n)$ time.
+
+\paragraph{Solution.} Write each number $x$ in base $n$:
+\[
+x=a_2n^2+a_1n+a_0,
+\]
+where each digit $a_0,a_1,a_2$ lies in $\{0,1,\dots,n-1\}$.
+
+Every number in the range $0$ to $n^3-1$ has at most $3$ base-$n$ digits, so we can use radix sort with three stable counting-sort passes:
+\begin{enumerate}
+\item stable sort by the least significant digit $a_0$,
+\item stable sort by the middle digit $a_1$,
+\item stable sort by the most significant digit $a_2$.
+\end{enumerate}
+
+Each counting-sort pass takes $O(n+n)=O(n)$ time, since there are $n$ items and each digit is between $0$ and $n-1$.  There are only $3$ passes, so the total running time is $O(n)$.
+
+\textbf{Correctness.} Since each pass is stable, radix sort orders the numbers correctly by their base-$n$ digits.  That is the same as ordering them by value, so the algorithm sorts the list in $O(n)$ time.
+ 
+\end{document}

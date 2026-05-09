@@ -1,0 +1,312 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref, amsmath,amsthm,amssymb,amsfonts}
+\usepackage{setspace}
+\usepackage{enumitem}
+\setstretch{1.15}
+
+\newcommand{\true}{\texttt{TRUE}}
+\newcommand{\false}{\texttt{FALSE}}
+
+\usepackage{hyperref}\hypersetup{colorlinks=true,linkcolor=black,citecolor=blue,urlcolor=blue}
+
+
+
+\title{CS 344: Design and Analysis of Computer Algorithms\\
+Homework 1}
+\author{Sections 05, 06, 07, and 08\\
+\underline{Instructor}: Daniel Schoepflin\\
+(\url{ds2196@rutgers.edu})}
+\date{}
+
+\begin{document}
+
+\maketitle
+{\centering   {\bf Due Date}: {\it 11:59 PM, February 16, 2026}
+
+
+}
+
+\paragraph{Instructions:} For the homework, you may utilize any outside resources in completing the solutions, but \textbf{copying is not permitted}.  In other words, your submission must be in your own words.  Moreover, you must cite any outside resource you use in your homework.
+
+\paragraph{Format:} Homeworks will be released on Canvas and should also be turned in on Canvas in the Gradescope as a {\bf single pdf file} containing the solutions in order. You must typeset your homework using 
+\LaTeX.   
+
+You can download \LaTeX\ for free here: \url{https://www.latex-project.org/get/}. For the purpose of this course, you do not even need to install \LaTeX\ and 
+can instead use an online \LaTeX\ editor such as Overleaf (\url{https://www.overleaf.com}.
+Two great introductory resources for  \LaTeX\ are \url{https://www.tug.org/begin.html}  and \url{http://joshua.smcvt.edu/proofs/tutorial.pdf}. 
+You can also use the wonderful tool Detexify (\url{http://detexify.kirelabs.org/classify.html})  for finding the
+ \LaTeX\ commands of a symbol (just draw the symbol!).  
+If you are interested in learning more about \LaTeX\ (beyond what is needed for this course), check the Wikibook on \LaTeX\ (\url{https://en.wikibooks.org/wiki/LaTeX}). 
+The course staff are also available to help you with any question you may have in using \LaTeX.
+
+
+
+\paragraph{Late homeworks:} You are not allowed to submit homeworks late.  If the homework is submitted late you will receive {\bf zero points}. 
+\clearpage
+
+
+\paragraph{Problem 1.} Let $f$ and $g$ be two functions with $f(n) \geq 1$ and $g(n) \geq 1$ for all $n \geq 1$.  Let $h^2(n)$ denote $h(n)\cdot h(n)$ for any function $h$ and any $n$.  Is it true that $21f^2(n) + 14g^2(n) = \Theta((f(n) +g(n))^2)$?  Provide a formal proof of your answer.
+\paragraph{Solution.}
+Yes, this is true.
+
+Define
+\[
+F(n)=21f^2(n)+14g^2(n), \qquad G(n)=(f(n)+g(n))^2.
+\]
+For every $n\ge 1$,
+\[
+F(n)\ge 14(f^2(n)+g^2(n)).
+\]
+Also, for any real numbers $x,y$,
+\[
+x^2+y^2 \ge \frac{(x+y)^2}{2}.
+\]
+Applying this with $x=f(n), y=g(n)$ gives
+\[
+F(n)\ge 14\cdot \frac{(f(n)+g(n))^2}{2}=7G(n).
+\]
+So $F(n)=\Omega(G(n))$.
+
+For the upper bound,
+\[
+F(n)=21f^2(n)+14g^2(n)\le 21(f^2(n)+g^2(n)).
+\]
+Since
+\[
+f^2(n)+g^2(n)\le (f(n)+g(n))^2=G(n),
+\]
+we get
+\[
+F(n)\le 21G(n).
+\]
+So $F(n)=O(G(n))$.
+
+Therefore $F(n)=\Theta(G(n))$, i.e.
+\[
+21f^2(n)+14g^2(n)=\Theta((f(n)+g(n))^2).
+\]
+
+\paragraph{Problem 2.} Let $f$ and $g$ be two functions with $f(n) \geq 1$ and $g(n) \geq 1$ for all $n \geq 1$ such that $f(n) = O(g(n))$.  Is it true that $2^{f(n)} = O(2^{g(n)})$?  Provide a formal proof of your answer.
+\paragraph{Solution.}
+No, this is not always true.
+
+Counterexample: let
+\[
+g(n)=n,\qquad f(n)=2n.
+\]
+Then clearly $f(n)=O(g(n))$ because $2n\le 2\cdot n$ for all $n$.
+
+Now compare exponentials:
+\[
+2^{f(n)}=2^{2n}=4^n,\qquad 2^{g(n)}=2^n.
+\]
+If $2^{f(n)}=O(2^{g(n)})$, then there should be a constant $c>0$ and $n_0$ such that for all $n\ge n_0$,
+\[
+2^{2n}\le c\cdot 2^n.
+\]
+Equivalently, $2^n\le c$ for all large $n$, which is impossible since $2^n\to\infty$.
+
+So $2^{f(n)}$ is not necessarily $O(2^{g(n)})$ even when $f(n)=O(g(n))$.
+
+\paragraph{Problem 3.} Solve the following recurrence equations using the specified technique.  In each you may assume that $T(1) = \Theta(1)$.
+
+\begin{itemize}
+    \item Using a recursion tree:  $T(n) = 2T(n-1) + 3$.
+\paragraph{Solution.}
+At level $i$ of the recursion tree, there are $2^i$ subproblems and each contributes $3$, so level cost is $3\cdot 2^i$.
+The depth is $n-1$ (from $n$ down to $1$).
+
+So the total non-leaf cost is
+\[
+\sum_{i=0}^{n-2} 3\cdot 2^i = 3(2^{n-1}-1).
+\]
+Number of leaves is $2^{n-1}$, each with cost $T(1)=\Theta(1)$, so leaf contribution is $\Theta(2^{n-1})$.
+
+Therefore,
+\[
+T(n)=\Theta(2^n).
+\]
+
+    \item Using the substitution method:  $T(n) = T(n/3) + T(n/4) + n\log{n}$.
+\paragraph{Solution.}
+Claim: $T(n)=\Theta(n\log n)$.
+
+\textbf{Upper bound ($O(n\log n)$):} Assume for all smaller arguments that
+\[
+T(k)\le c\,k\log k
+\]
+for some constant $c>0$. Then
+\[
+\begin{aligned}
+T(n)
+&=T(n/3)+T(n/4)+n\log n\\
+&\le c\frac n3\log\frac n3 + c\frac n4\log\frac n4 + n\log n\\
+&\le c\left(\frac 13+\frac 14\right)n\log n + n\log n\\
+&=\left(\frac{7c}{12}+1\right)n\log n.
+\end{aligned}
+\]
+Choose $c\ge \frac{12}{5}$, then $\frac{7c}{12}+1\le c$, so
+\[
+T(n)\le c\,n\log n.
+\]
+Hence $T(n)=O(n\log n)$.
+
+\textbf{Lower bound ($\Omega(n\log n)$):}
+Since the recursive terms are nonnegative,
+\[
+T(n)=T(n/3)+T(n/4)+n\log n \ge n\log n.
+\]
+So $T(n)=\Omega(n\log n)$.
+
+Combining both bounds gives
+\[
+T(n)=\Theta(n\log n).
+\]
+
+    \item Using the master theorem:  $T(n) = 3T(n/2) + 3n^2$.
+\paragraph{Solution.}
+Here $a=3$, $b=2$, and $f(n)=3n^2$.
+\[
+n^{\log_b a}=n^{\log_2 3}\approx n^{1.585}.
+\]
+Since $f(n)=\Theta(n^2)=\Omega(n^{\log_2 3+\varepsilon})$ with $\varepsilon\approx 0.415$, we are in Master Theorem Case 3 (if regularity holds).
+
+Regularity:
+\[
+a f(n/b)=3\cdot 3\left(\frac n2\right)^2=\frac{9}{4}n^2\le c\cdot 3n^2
+\]
+with $c=\frac34<1$.
+
+So by Case 3,
+\[
+T(n)=\Theta(f(n))=\Theta(n^2).
+\]
+\end{itemize}
+
+
+\paragraph{Problem 4.}  Solve the recurrence $T(n) = 4T(\sqrt{n}) + \log{n}$ using any method after applying an appropriate change of variables.  HINT:  We know how to handle recurrences where the input parameter is \emph{divided} at each step, e.g., $S(m) = aS(m/b) + f(m)$.  What sort of substitution could ``transform'' $n$ into $m$ and $\sqrt{n}$ into $m/2$?
+\paragraph{Solution.}
+Use the substitution
+\[
+n=2^m,\qquad S(m)=T(2^m).
+\]
+Then $\sqrt n=2^{m/2}$, so
+\[
+S(m)=4S(m/2)+m.
+\]
+Now apply Master Theorem with $a=4$, $b=2$, $f(m)=m$:
+\[
+m^{\log_2 4}=m^2,\qquad f(m)=O(m^{2-1}).
+\]
+This is Case 1, so
+\[
+S(m)=\Theta(m^2).
+\]
+Substitute back $m=\log n$:
+\[
+T(n)=\Theta((\log n)^2).
+\]
+
+\paragraph{Problem 5.}  Consider the following problems related to a variation of mergesort.
+
+
+\textbf{Part 1.}  Solve the recurrence $T(n) = \sqrt{n}T(\sqrt{n}) + 2n$ using any method (once again, begin by applying a change of variables as in Problem 4). 
+\paragraph{Solution.}
+Unroll the recurrence directly:
+\[
+T(n)=\sqrt n\,T(n^{1/2})+2n.
+\]
+After two expansions:
+\[
+T(n)=n^{3/4}T(n^{1/4})+4n.
+\]
+After $i$ expansions:
+\[
+T(n)=n^{\,1-1/2^i}\,T\!\left(n^{1/2^i}\right)+2ni.
+\]
+Stop when $n^{1/2^i}=2$ (constant-size base case), i.e.
+\[
+\frac{1}{2^i}=\log_n 2 \quad\Longrightarrow\quad i=\log_2\log_2 n.
+\]
+Then
+\[
+n^{\,1-1/2^i}T\!\left(n^{1/2^i}\right)
+=n^{\,1-\log_n 2}T(2)
+=\frac n2\cdot \Theta(1)
+=\Theta(n).
+\]
+And
+\[
+2ni=2n\log_2\log_2 n=\Theta(n\log\log n).
+\]
+Therefore,
+\[
+T(n)=\Theta(n\log\log n).
+\]
+
+\textbf{Part 2.}  Suppose in mergesort, instead of splitting the list into two parts, we split the list of size $n$ into $\sqrt{n}$ parts.  Otherwise, we keep the rest of the operation the same, only adjusting the divide and conquer (i.e., recursive calls and merging) processes, accordingly, as needed.  Does the solution to the above recurrence correctly model this new variation of mergesort?  If so, what does this imply?  If not, why not?
+\paragraph{Solution.}
+Not exactly.
+
+The recurrence in Part 1 assumes combine (merge) cost is $2n=\Theta(n)$.
+For this mergesort variation, after recursively sorting $\sqrt n$ sublists (each of size $\sqrt n$), we still need to merge \emph{$\sqrt n$ sorted lists} into one sorted list.
+
+That merge step is generally not linear:
+\begin{itemize}
+    \item With a min-heap, $k$-way merge takes $\Theta(n\log k)=\Theta(n\log\sqrt n)=\Theta(n\log n)$.
+    \item Pairwise merge tree also gives $\Theta(n\log\sqrt n)=\Theta(n\log n)$.
+\end{itemize}
+So the true recurrence would be closer to
+\[
+T(n)=\sqrt n\,T(\sqrt n)+\Theta(n\log n),
+\]
+not with a $\Theta(n)$ merge term.
+
+So the Part 1 result $\Theta(n\log\log n)$ does \textbf{not} correctly model this mergesort variant. In other words, we do not get an $n\log\log n$ sorting algorithm from this change alone.
+
+\paragraph{Problem 6.}  Design an algorithm for the following task, prove that it is correct (as formally as possible), and analyze its running time.
+
+You are given a positive number $m$ and \emph{sorted} array $A$ of $n < m$ \emph{distinct} numbers each in the range from $1$ to $m$.  Find the smallest positive number missing from $A$.  For example, on an input $m = 12$ and $A = [1,5,8,10,11]$, your algorithm should output $2$.
+\paragraph{Solution.}
+Because $A$ is sorted and has distinct values, the smallest missing value is the first position where the expected value does not match.
+
+\textbf{Algorithm (binary search idea).}
+\begin{enumerate}[label=\arabic*.]
+    \item If $A[0]\ne 1$, return $1$.
+    \item Set $\ell=0$, $r=n-1$.
+    \item While $\ell\le r$:
+    \begin{itemize}
+        \item $mid=\left\lfloor(\ell+r)/2\right\rfloor$.
+        \item If $A[mid]=mid+1$, set $\ell=mid+1$.
+        \item Else set $r=mid-1$.
+    \end{itemize}
+    \item Return $\ell+1$.
+\end{enumerate}
+
+\textbf{Why this works.}
+If there were no missing numbers up to index $i$, then necessarily $A[i]=i+1$.
+So we are looking for the first index $j$ such that $A[j]\ne j+1$.
+
+Loop invariant:
+\begin{itemize}
+    \item Every index $i<\ell$ satisfies $A[i]=i+1$.
+    \item The first mismatching index (if it exists) is in $[\ell,r+1]$.
+\end{itemize}
+Initially true with $\ell=0,r=n-1$.  
+At each step:
+\begin{itemize}
+    \item If $A[mid]=mid+1$, then mismatch cannot be at or before $mid$, so set $\ell=mid+1$.
+    \item If $A[mid]\ne mid+1$, then first mismatch is at $mid$ or earlier, so set $r=mid-1$.
+\end{itemize}
+So invariant is preserved.
+
+When loop ends, $\ell=r+1$, so $\ell$ is exactly the first mismatching index. Therefore the smallest missing positive is $\ell+1$.
+If all entries match ($A[i]=i+1$ for all $i$), then $\ell=n$ and algorithm returns $n+1$, which is valid since $n<m$.
+
+\textbf{Running time.}
+Each iteration halves the search range, so the loop runs in $O(\log n)$ time.
+Space usage is $O(1)$.
+ 
+\end{document}

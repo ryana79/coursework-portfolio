@@ -1,0 +1,187 @@
+Homework 4
+Ryan Amir
+
+1. Relation R(A, B, C, D)
+
+a) FDs: C -> D, C -> A, B -> C
+
+B+ = ABCD, so B is the only candidate key.
+
+The dependency B -> C is fine for BCNF because B is a key.  However, C -> D
+and C -> A violate BCNF because C is not a superkey.  They also violate 3NF,
+since A and D are not prime attributes.  Since the only key has one attribute,
+there are no partial-key dependencies, so the best normal form is 2NF.
+
+BCNF decomposition:
+R1(C, A, D)
+R2(B, C)
+
+In R1, C is the key.  In R2, B is the key.
+
+
+b) FDs: B -> C, D -> A
+
+(BD)+ = ABCD, so BD is the only candidate key.
+
+B -> C and D -> A are both partial dependencies on part of the key BD.  Because
+of that, the relation is not in 2NF.  The best normal form is 1NF.
+
+BCNF decomposition:
+R1(B, C)
+R2(D, A)
+R3(B, D)
+
+R1 has key B, R2 has key D, and R3 has no nontrivial dependencies.
+
+
+c) FDs: ABC -> D, D -> A
+
+ABC+ = ABCD, so ABC is a candidate key.
+BCD+ = ABCD, because D -> A, so BCD is also a candidate key.
+
+Candidate keys: ABC, BCD.
+
+The dependency D -> A violates BCNF because D is not a superkey.  However, A is
+a prime attribute since it is part of the key ABC.  ABC -> D also has a superkey
+on the left side.  Therefore the relation is in 3NF, but not BCNF.
+
+BCNF decomposition:
+R1(D, A)
+R2(B, C, D)
+
+R1 has key D.  R2 has no nontrivial projected dependency that violates BCNF.
+
+
+d) FDs: AB -> C, AB -> D, C -> A, D -> B
+
+AB+ = ABCD, so AB is a candidate key.
+AD+ = ABCD, because D -> B and then AB -> C, so AD is a candidate key.
+BC+ = ABCD, because C -> A and then AB -> D, so BC is a candidate key.
+CD+ = ABCD, because C -> A and D -> B, so CD is a candidate key.
+
+Candidate keys: AB, AD, BC, CD.
+
+C -> A and D -> B violate BCNF because neither C nor D is a superkey.  The
+relation is still in 3NF because every attribute A, B, C, and D is prime.
+Therefore the best normal form is 3NF.
+
+BCNF decomposition:
+R1(C, A)
+R2(D, B)
+R3(C, D)
+
+R1 has key C, R2 has key D, and R3 has no nontrivial dependencies.
+
+
+2. R = A B C D E F G H
+F = { AB -> C, AC -> B, AD -> E, B -> D, BC -> A, E -> G }
+
+For each attribute set below, I list a projected set of dependencies that
+represents the dependencies over that attribute set, then a minimal cover.
+
+a) Attributes: A B C
+
+Projected dependencies:
+AB -> C
+AC -> B
+BC -> A
+
+Minimal cover:
+AB -> C
+AC -> B
+BC -> A
+
+
+b) Attributes: A B C D
+
+Projected dependencies:
+B -> D
+AB -> C
+AC -> B
+BC -> A
+
+For example, AC -> D also holds, but it follows from AC -> B and B -> D, so it
+does not need to be listed separately.
+
+Minimal cover:
+B -> D
+AB -> C
+AC -> B
+BC -> A
+
+
+c) Attributes: A B C E G
+
+Projected dependencies:
+AB -> C
+AC -> B
+BC -> A
+AB -> E
+E -> G
+
+These imply the other useful projected dependencies.  For instance, AB -> G
+follows from AB -> E and E -> G.  Also AC -> E follows because AC gives B, so
+AC gives AB, and then AB -> E.
+
+Minimal cover:
+AB -> C
+AC -> B
+BC -> A
+AB -> E
+E -> G
+
+
+d) Attributes: D C E G H
+
+Projected dependencies:
+E -> G
+
+No dependency using C, D, or H gives anything new inside this set.
+
+Minimal cover:
+E -> G
+
+
+e) Attributes: A C E H
+
+Projected dependencies:
+AC -> E
+
+This comes from AC -> B, then B -> D, then AD -> E.
+
+Minimal cover:
+AC -> E
+
+
+3. SQL isolation levels
+
+a) Enroll a student into the class named 'Analysis of Algorithms'
+
+I would use READ COMMITTED.  The transaction only needs to read committed class
+information and then insert the enrollment record.  Dirty reads should not be
+allowed, but full serializable isolation is more than is needed for this basic
+insert.
+
+
+b) Change enrollment for a student from one class to another class
+
+I would use REPEATABLE READ.  This transaction has more than one step: check the
+student's current enrollment, remove it, and add the new enrollment.  REPEATABLE
+READ keeps the student's enrollment information stable while the transaction is
+running, which is safer than READ COMMITTED for this kind of change.
+
+
+c) Assign a new faculty member to the class with the least number of students
+
+I would use SERIALIZABLE.  This transaction depends on an aggregate condition:
+which class currently has the fewest students.  If another transaction enrolls
+students at the same time, the answer could change.  SERIALIZABLE prevents that
+kind of race and makes the result behave as if the transactions happened one at
+a time.
+
+
+d) For each class, show the number of students enrolled in the class
+
+I would use READ COMMITTED.  This is a read-only report, and it should not read
+uncommitted enrollment changes.  READ COMMITTED gives counts based only on
+committed data without adding the extra locking cost of SERIALIZABLE.

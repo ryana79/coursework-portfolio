@@ -1,0 +1,5 @@
+Approach summary (produced by cGPT):
+- Read and inspected the raw log file to understand formats and edge cases.
+- Wrote helper functions to validate lines, normalize timestamps, parse fields, and build records.
+- Normalized action values to the required set (LOGIN, VIEW_PAGE, DOWNLOAD, SUBMIT, UNKNOWN).
+- Built summary statistics (valid/invalid counts, unique users, action counts, top pages).
