@@ -25,10 +25,13 @@ Coursework focused on relational modeling, SQL queries, functional dependencies,
 
 ### Data Management for Data Science
 
-Python and notebook-based coursework covering log processing, data cleaning, structured records, exploratory workflows, and data science project organization.
+Python and notebook-based coursework covering log processing, data cleaning, structured records, exploratory workflows, SQL/database practice, and data science project organization.
 
-- [Assignment 1: Log Processing](data-management-data-science/assignment-01/log-processing.ipynb)
-- [Recitation 1: Python Basics](data-management-data-science/recitation-01/python-basics.ipynb)
+- [Lab 1: Log File Processing](data-management-data-science/lab-01-log-file-processing/log-processing.ipynb)
+- [Lab 2: World Economy Analysis](data-management-data-science/lab-02-world-economy-analysis/world-economy-analysis.ipynb)
+- [Lab 3: Amazon Reviews](data-management-data-science/lab-03-amazon-reviews/amazon-reviews.ipynb)
+- [Lab 4: Databases](data-management-data-science/lab-04-databases/databases.ipynb)
+- [Micro-Skills Lab 1: Python Basics](data-management-data-science/micro-skills-lab-01-python-basics/python-basics.ipynb)
 - [Course project repository](data-management-data-science/project-link.md)
 
 ## Highlighted Projects
