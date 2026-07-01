@@ -1,0 +1,52 @@
+# Compiled binaries
+*.o
+*.out
+*.exe
+memgrind
+memtest
+test_mymalloc
+outlier
+mysh
+rpsd
+rc
+strlen
+
+# Build artifacts
+*.a
+*.so
+*.dylib
+
+# System files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE/Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Debug files
+*.dSYM/
+*.pdb
+
+# Output files (from shell tests)
+output.txt
+
+# Archive files
+*.tar
+*.zip
+
+# Core dumps
+core
+core.*
+
+# Temporary files
+*.tmp
+*.temp 

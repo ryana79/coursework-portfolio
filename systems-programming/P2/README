@@ -1,0 +1,20 @@
+Authors: Ryan Amir and Gian Cases
+
+
+Design Choices
+For this project, our goal was to build a word frequency analyzer that could spot outliers. words that showed up way more often in one file compared to the rest. To do that, we designed our code around two main data structures: a FileInfo struct to keep track of words within each file, and a global list of all words so we could calculate their overall frequencies.
+
+We used open() and read() for input, as required, and took a state-machine-like approach to parsing, basically keeping track of when a word starts and ends, especially since the rules for punctuation and letters were pretty specific. We followed the project’s definition of a valid word closely, ignoring words that started with things like ( or ended with punctuation like ! or ?. Everything was converted to lowercase to handle case differences.
+
+One of the bigger improvements we made was switching to dynamic memory allocation for reading in words. We used to rely on a fixed buffer , but that could cut off longer words. Now we use a resizable buffer that grows using realloc when needed, so it can handle words of any length. I wrote my_strdup() as a replacement for strdup() since it's not part of standard C. It uses malloc() and memcpy() to duplicate strings, which keeps the code portable and avoids relying on non-standard functions.
+
+We also made word tracking fully dynamic using realloc, so the program can handle any number of words or files without issue. To match the output format from the project spec, we calculate the highest ratio of per-file frequency to global frequency for each word, breaking ties alphabetically.
+
+For reading directories, we recursively go through all subdirectories, skip hidden files, and only process .txt files, just like the instructions say. Direct file arguments are always processed, no matter their extension.
+
+Testing Strategy
+We tested our program using a mix of custom-made and real-world text files. To cover edge cases, we included files that contained only punctuation and numbers, words that started or ended with invalid characters, repeated words to check frequency calculations, and files that were either empty or had no valid words.
+
+We also set up multiple .txt files inside nested directories to make sure the recursive directory traversal worked as expected. We verified the output manually and compared it to example cases, like the “spam eggs bacon” scenario from the spec.
+
+To make sure memory was handled properly, we ran the program through Valgrind and resolved all memory leaks. We also confirmed that the program can handle large files and very long words without crashing or slowing down noticeably.

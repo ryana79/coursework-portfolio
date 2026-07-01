@@ -1,0 +1,24 @@
+# macOS
+.DS_Store
+__MACOSX/
+
+# OCaml build artifacts
+_build/
+*.cmi
+*.cmo
+*.cmx
+*.o
+*.out
+*.annot
+*.byte
+*.native
+
+# Parser/lexer outputs
+assignment3/assignment3/src/Parser/parser.output
+
+# Binaries
+assignment3/assignment3/imp
+assignment1/assignment1
+assignment2/assignment2
+
+

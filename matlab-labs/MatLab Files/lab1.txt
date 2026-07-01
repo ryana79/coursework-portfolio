@@ -1,0 +1,359 @@
+format compact
+% Ryan Amir
+% 3814
+% Section C1
+% Math 250 MATLAB Lab Assignment #1
+rand('seed', 3814)
+% Question 1 (a)
+R = rand(2, 3)
+R =
+    0.2347    0.4080    0.0214
+    0.2850    0.5044    0.0230
+R = rand(2, 3)
+R =
+    0.3028    0.3306    0.8615
+    0.8150    0.2586    0.7665
+R = rand(2, 3)
+R =
+    0.7356    0.7783    0.1771
+    0.8247    0.1538    0.7765
+% Question 1 (b)
+A = [1 2; 3 4; 5 6]
+A =
+     1     2
+     3     4
+     5     6
+B = [1 2 3; 4 5 6; 7 8 9]
+B =
+     1     2     3
+     4     5     6
+     7     8     9
+x = [4 3 2]
+x =
+     4     3     2
+X = [1; 2; 3]
+X =
+     1
+     2
+     3
+A
+A =
+     1     2
+     3     4
+     5     6
+B
+B =
+     1     2     3
+     4     5     6
+     7     8     9
+R
+R =
+    0.7356    0.7783    0.1771
+    0.8247    0.1538    0.7765
+x
+x =
+     4     3     2
+X
+X =
+     1
+     2
+     3
+whos
+  Name      Size            Bytes  Class     Attributes
+
+  A         3x2                48  double              
+  B         3x3                72  double              
+  R         2x3                48  double              
+  X         3x1                24  double              
+  x         1x3                24  double              
+% Question 1 (c)
+[size(A); size(B); size(X); size(x)]
+ans =
+     3     2
+     3     3
+     3     1
+     1     3
+S = ans
+S =
+     3     2
+     3     3
+     3     1
+     1     3
+% Question 1 (d)
+a32 = A(3,2)
+a32 =
+     6
+A(3,2) = 7
+A =
+     1     2
+     3     4
+     5     7
+A(3,2) = 6
+A =
+     1     2
+     3     4
+     5     6
+% Question 1 (e)
+C(:,1) = B(:,1); C(:,2)= B(:,3)
+C =
+     1     3
+     4     6
+     7     9
+D(1,:) = B(1,:); D(2,:) = B(3,:)
+D =
+     1     2     3
+     7     8     9
+C, D
+C =
+     1     3
+     4     6
+     7     9
+D =
+     1     2     3
+     7     8     9
+% Question 2 (a)
+% The combinations that fit together are [A X] [B C] [B; D]
+[A X]
+ans =
+     1     2     1
+     3     4     2
+     5     6     3
+[B C]
+ans =
+     1     2     3     1     3
+     4     5     6     4     6
+     7     8     9     7     9
+[C D]
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('horzcat')" style="font-weight:bold">horzcat</a>
+Dimensions of arrays being concatenated are not consistent.} 
+[C; B]
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('vertcat')" style="font-weight:bold">vertcat</a>
+Dimensions of arrays being concatenated are not consistent.} 
+[B; D]
+ans =
+     1     2     3
+     4     5     6
+     7     8     9
+     1     2     3
+     7     8     9
+% Question 2 (b)
+eye(4)
+ans =
+     1     0     0     0
+     0     1     0     0
+     0     0     1     0
+     0     0     0     1
+zeros(3)
+ans =
+     0     0     0
+     0     0     0
+     0     0     0
+zeros(3,5)
+ans =
+     0     0     0     0     0
+     0     0     0     0     0
+     0     0     0     0     0
+ones(2,3)
+ans =
+     1     1     1
+     1     1     1
+diag([4 5 6 7])
+ans =
+     4     0     0     0
+     0     5     0     0
+     0     0     6     0
+     0     0     0     7
+format short
+format compact
+ u = fix(10*rand(3,1)), v = fix(10*rand(3,1)),
+u =
+     1
+     9
+     1
+v =
+     3
+     8
+     4
+A = fix(10*rand(2,3)), B = fix(10*rand(2,3))
+A =
+     1     2     7
+     8     0     0
+B =
+     6     3     1
+     5     4     5
+% Question 3 (a)
+A + B, B + A, 6*B, 2*(3*B), 6*A + 15*B, 3*(2*A + 5*B), 3*A, (3*A')'
+ans =
+     7     5     8
+    13     4     5
+ans =
+     7     5     8
+    13     4     5
+ans =
+    36    18     6
+    30    24    30
+ans =
+    36    18     6
+    30    24    30
+ans =
+    96    57    57
+   123    60    75
+ans =
+    96    57    57
+   123    60    75
+ans =
+     3     6    21
+    24     0     0
+ans =
+     3     6    21
+    24     0     0
+% Matrix Addition is commutative: A + B is the same as B + A
+% Scalar Multiplication is associative: 6B is the same as 2(3B)
+% Linear Combination is distributive: 6A + 15B is the same as 3(2A + 5B)
+% Scalar Multiplication distributes over Matrix Addition: 6A + 15B is the same as 3(2A + 5B)
+% Scalar Multiplication of a matrix is the same as scalar multiplication of each element: 3A is the same as (3A)^T
+% Question 3 (b)
+A*u + A*v, A*(u + v), (A + B)*u, A*u + B*u, A*(3*u), 3*A*(u)
+ans =
+    73
+    32
+ans =
+    73
+    32
+ans =
+    60
+    54
+ans =
+    60
+    54
+ans =
+    78
+    24
+ans =
+    78
+    24
+% Matrix-Vector Product is distributive over Vector Addition: Au + Av is the same as A(u + v)
+% Matrix-Vector Product distributes over Vector Addition in reverse order: (A + B)u is the same as Au + Bu
+% Scalar Multiplication distributes over Matrix-Vector Product: A(3u) is the same as 3A(u)
+% Question 4 (a)
+A = fix(10*rand(3,4))
+A =
+     9     1     5     2
+     5     7     3     3
+     9     9     8     5
+R = A; R(1,:) = R(1,:)/R(1,1)
+R =
+    1.0000    0.1111    0.5556    0.2222
+    5.0000    7.0000    3.0000    3.0000
+    9.0000    9.0000    8.0000    5.0000
+R(2,:) = R(2,:) - R(2,1)*R(1,:)
+R =
+    1.0000    0.1111    0.5556    0.2222
+         0    6.4444    0.2222    1.8889
+    9.0000    9.0000    8.0000    5.0000
+R(3,:) = R(3,:) - R(3,1)*R(1,:)
+R =
+    1.0000    0.1111    0.5556    0.2222
+         0    6.4444    0.2222    1.8889
+         0    8.0000    3.0000    3.0000
+% Question 4 (b)
+R(2, :) = R(2, :) / R(2, 2)
+R =
+    1.0000    0.1111    0.5556    0.2222
+         0    1.0000    0.0345    0.2931
+         0    8.0000    3.0000    3.0000
+R(1, :) = R(1, :) - R(1, 2) * R(2, :)
+R =
+    1.0000         0    0.5517    0.1897
+         0    1.0000    0.0345    0.2931
+         0    8.0000    3.0000    3.0000
+R(3, :) = R(3, :) - R(3, 2) * R(2, :)
+R =
+    1.0000         0    0.5517    0.1897
+         0    1.0000    0.0345    0.2931
+         0         0    2.7241    0.6552
+% Question 4 (c)
+R(3, :) = R(3, :) / R(3, 3)
+R =
+    1.0000         0    0.5517    0.1897
+         0    1.0000    0.0345    0.2931
+         0         0    1.0000    0.2405
+R(1, :) = R(1, :) - R(1, 3) * R(3, :)
+R =
+    1.0000         0         0    0.0570
+         0    1.0000    0.0345    0.2931
+         0         0    1.0000    0.2405
+R(2, :) = R(2, :) - R(2, 3) * R(3, :)
+R =
+    1.0000         0         0    0.0570
+         0    1.0000         0    0.2848
+         0         0    1.0000    0.2405
+% Question 4 (d)
+rref(A)
+ans =
+    1.0000         0         0    0.0570
+         0    1.0000         0    0.2848
+         0         0    1.0000    0.2405
+% Question 5 (a)
+a = [0.10; 0.15; 0.30],
+a =
+    0.1000
+    0.1500
+    0.3000
+m = [0.20; 0.25; 0.10],
+m =
+    0.2000
+    0.2500
+    0.1000
+s = [0.20; 0.35; 0.10]
+s =
+    0.2000
+    0.3500
+    0.1000
+C = [a, m, s]
+C =
+    0.1000    0.2000    0.2000
+    0.1500    0.2500    0.3500
+    0.3000    0.1000    0.1000
+% Question 5 (b)
+x = [40; 50; 30]
+x =
+    40
+    50
+    30
+net_production = x - (C*x)
+net_production =
+    20
+    21
+    10
+% The net production is $20 million in agriculture, $21 million in manufacturing and $10 million in services
+% Question 5 (c)
+d = [90; 72; 96]
+d =
+    90
+    72
+    96
+% Question 5 (ci)
+% The equation is C * x = d
+% Question 5 (cii)
+identity_matrix = eye(3),
+identity_matrix =
+     1     0     0
+     0     1     0
+     0     0     1
+modified_equation_matrix = identity_matrix - C,
+modified_equation_matrix =
+    0.9000   -0.2000   -0.2000
+   -0.1500    0.7500   -0.3500
+   -0.3000   -0.1000    0.9000
+augmented_matrix = [modified_equation_matrix, d],
+augmented_matrix =
+    0.9000   -0.2000   -0.2000   90.0000
+   -0.1500    0.7500   -0.3500   72.0000
+   -0.3000   -0.1000    0.9000   96.0000
+reduced_row_echelon_form = rref(augmented_matrix)
+reduced_row_echelon_form =
+    1.0000         0         0  194.0000
+         0    1.0000         0  226.5000
+         0         0    1.0000  196.5000
+%The gross production needed to satisfy d is $194 million in agriculture, $226.5 million manufacturing and $196.5 million in services

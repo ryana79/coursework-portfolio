@@ -1,0 +1,93 @@
+My Shell Testing Documentation and Test Plan
+
+Names: Ryan Amir and Gian Cases
+Net-IDs: rma167 and grc74
+
+Summary:
+This project implements a simple command-line shell, "mysh", which supports both interactive and batch modes. 
+This document describes the testing strategy and details the test files and test cases used to verify the 
+key features of the shell.
+
+Testing Strategy: 
+Our tests cover the following functionalities:
+1. Basic Commands:
+   - Built-in commands like pwd, cd, and which
+   - Error handling (example: attempting to change to a non-existent directory)
+
+2. Input and Output Redirection:
+   - Testing the redirection operators (< and >) using the cat command
+   - Verifying that the file used for input is correctly read and the output file contains the expected text
+
+3. Pipeline Functionality:
+   - Ensuring a pipeline connects two processes (example: cat and wc -w)
+   - Validating that the pipeline correctly passes output from the first command as input to the second
+
+4. Wildcard Expansion:
+   - Testing the expansion of wildcard tokens (example: *.txt) to match filenames
+   - Confirming that when no file matches a pattern, the token remains unchanged
+
+5. Conditional Execution:
+   - Using "and" and "or" to conditionally execute commands based on the exit status of previous commands
+   - Checking that only the appropriate commands execute depending on the success (or failure) of previous commands
+
+6. Termination Commands:
+   - Confirming that the "exit" command terminates the shell successfully
+   - Confirming that the "die" command prints a message and terminates the shell with a failure status. Commands following these should not be executed
+
+Test Files:
+The following batch files have been created:
+
+- **test_basic.sh**:
+  Tests basic built-in commands (pwd, cd, and which) including error handling for a non-existent directory
+
+- **test_redirection.sh**:
+  Tests input (“<”) and output (“>”) redirection using the cat command
+  Requirements: an "input.txt" file should be present in the same directory
+
+- **test_pipeline.sh**:
+  Tests pipeline functionality by connecting "cat" with "wc -w"
+  Requirements: a "test_pipeline_input.txt" file with sample text should be present
+
+- **test_wildcard.sh**:
+  Tests wildcard expansion by listing all ".txt" files in the current directory
+  (This should display files such as input.txt and test_pipeline_input.txt)
+
+- **test_conditionals.sh**:
+  Tests conditional command execution using "and" and "or" in combination with commands that simulate success (true) and failure (false)
+
+- **test_die.sh**:
+  Tests the "die" command. This command should print the provided error message and terminate the shell immediately
+
+- **test_exit.sh**:
+  Tests the "exit" command. Once encountered, the shell should terminate immediately
+
+Compilation:
+Using makefile, to compile the shell run:
+    make
+    
+To clean up generated files, run:
+    make clean
+
+Usage:
+You can run the shell in batch mode by specifying a test script file:
+    
+    ./mysh test_basic.sh
+    ./mysh test_redirection.sh
+    ./mysh test_pipeline.sh
+    ./mysh test_wildcard.sh
+    ./mysh test_conditionals.sh
+    ./mysh test_die.sh   (terminates the shell with failure)
+    ./mysh test_exit.sh  (terminates the shell normally)
+    
+To run the shell in interactive mode, run:
+    
+    ./mysh
+
+Additionally, manual testing was performed in interactive mode to verify that welcome and goodbye messages, 
+prompts, and error messages display correctly.
+
+Conclusion:
+This test suite covers the major functionalities of the mysh shell, including built-in commands, 
+I/O redirection, pipelines, wildcard expansion, conditional execution, and termination commands.
+A comprehensive testing strategy like this ensures that our shell behaves as expected across both 
+interactive and batch modes.

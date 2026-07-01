@@ -1,0 +1,84 @@
+format compact
+% Ryan Amir
+% 3814
+% Section C1
+% Math 250 MATLAB Lab Demo
+rand('seed', 3814)
+% Question 1(a)
+A = [0 1 2 ; 3 4 5]
+A =
+     0     1     2
+     3     4     5
+a = [9 ; -1]
+a =
+     9
+    -1
+A
+A =
+     0     1     2
+     3     4     5
+a
+a =
+     9
+    -1
+whos
+  Name      Size            Bytes  Class     Attributes
+
+  A         2x3                48  double              
+  a         2x1                16  double              
+
+% Question 1(b)
+a12 = A(1,2)
+a12 =
+     1
+% Question 1(c)
+% The matrix A is not a square matrix
+% Question 1(d)
+D = rdiag(3)
+D =
+     2     0     0
+     0     2     0
+     0     0     4
+% The matrix D is a diagonal matrix because it is a square matrix and
+% in D(i,j) where i does not equal j, the number is 0.
+% Question 2(e)
+23*D
+ans =
+    46     0     0
+     0    46     0
+     0     0    92
+% The scalar 23D is a diagonal matrix because it is a square matrix and
+% when the row # does not match the column # the number is 0
+0*D
+ans =
+     0     0     0
+     0     0     0
+     0     0     0
+% The matrix 0D is a diagonal matrix because it is square and
+% when the row # doesn't match the column # the number is 0
+-17*D
+ans =
+   -34     0     0
+     0   -34     0
+     0     0   -68
+% The matrix -17D is a diagonal matrix because it is square and
+% when row # and column # dont match, the number is 0
+0.1*D
+ans =
+    0.2000         0         0
+         0    0.2000         0
+         0         0    0.4000
+% The matrix 0.1D is a diagonal matrix because it's square and
+% when row # and column # dont match the number is 0
+% Question 2(f)
+% In general, multiplying a diagonal matrix(B) by a scalar(c) results in
+% a diagonal matrix (cB) because the scalar operation affects only the
+% elements on the main diagonal, leaving the off-diagonal elements unchanged.
+% This property holds due to the structure of diagonal matrices, where
+% non-diagonal entries are typically zero, making them invariant under scalar multiplication.
+
+
+
+
+
+diary off

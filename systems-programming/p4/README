@@ -1,0 +1,73 @@
+RPSD Testing Documentation and Test Plan
+
+Authors: Ryan Amir and Gian Cases
+
+Summary:
+This is our server (`rpsd`) for the CS 214 Rock-Paper-Scissors project. Basically, it lets people connect using a client (like the `rc` tool we got), pairs them up when two people are waiting, and lets them fight it out RPS style over the network. It follows the RPSP protocol rules laid out in the writeup.
+
+Compilation:
+Using makefile, to compile the project run:
+    make
+    
+To clean up generated files, run:
+    make clean
+
+How to run the code:
+
+./rpsd <port_number>
+This starts the server at the port number specified
+
+Then in a separate terminal, 
+./rc localhost <port_number>
+This starts the client program at the port number where the rspd server is listening
+
+
+*   `rpsd.c` (the main server code)
+*   `network.c` (the helper functions for sockets)
+*   `network.h` (the header for network)
+*   `rc.c` (the test client)
+
+
+Features & How It Works:
+Concurrent Games (Handles Multiple Games!): This was the main thing. We used fork() to handle multiple games at once. When two players are matched, the main parent process just fork()s a new child process. That child totally takes over managing the game between those two players. The parent just waits and goes back to listening for new connections or pairing up other waiting players.
+Game Logic (Child Process): Each child process uses poll() to watch both player sockets. This is key because it means the child doesn't get stuck if one player is slow or disconnects. It waits for input from either player, reads their messages, figures out who won the round based on the M|MOVE|| messages, sends back the R|RESULT|OPP_MOVE|| results, and handles the C (Continue) / Q (Quit) messages correctly. It even handles the weird case where C might get sent right before the next M message by separating the logic for single-char reads vs. || reads.
+Dynamic Player List: Instead of a fixed-size array that might fill up, we used malloc and realloc. The list of connected players starts small (INITIAL_PLAYER_CAPACITY) and automatically doubles in size whenever it gets full. So, technically, it can handle as many players as the server's memory allows. Way more flexible.
+Protocol Adherence: Sticks to the RPSP protocol. Sends W|1||, B|OpponentName||, R|...|| correctly. Reads P|PlayerName||, M|MOVE||, C, and Q. It uses read buffers in the child to handle partial messages from the network, looking for the || delimiter for moves or just the single C/Q character for rematches/quits.
+Duplicate Login Prevention: If "PlayerX" is already connected and waiting or playing, and someone else tries to connect as "PlayerX", the server catches it (find_active_player_by_name), sends back R|L|Logged in||, and disconnects the second person. No imposters allowed!
+Signal Handling: Catches SIGINT (Ctrl+C) for a reasonably clean shutdown (closes sockets, frees memory). It also handles SIGCHLD so that when child game processes exit, they don't turn into zombies – the parent reaps them properly using waitpid in the handler.
+
+
+Testing We Did
+We mostly used the rc client to test this out.
+
+Basic Game: Connected two clients, Player A and Player B.
+A sends P|PlayerA||, gets W|1||. Waits.
+B sends P|PlayerB||, gets W|1||.
+Both immediately get B|OpponentName||.
+Both send M|MOVE|| (e.g., M|ROCK||).
+Both receive the correct R|Result|OppMove|| message. Worked fine.
+
+Rematch: After the first round, both players sent C.
+The server correctly recognized both C messages.
+Both players received a new B|OpponentName|| message, starting the next round. Sweet.
+
+Quit: Played a round. Player A sent C, Player B sent Q.
+The child process handling their game exited.
+Both player connections were closed by the server (child).
+Forfeit (Disconnect): Player A and B connected and started a game (B|...|| sent).
+Player A sent M|ROCK||.
+Player B's terminal was closed (simulating a disconnect) before sending a move.
+Player A received R|F|||. Correct!
+
+Concurrency:
+Started server.
+Connected Client 1 (UserA) and Client 2 (UserB). They got paired and started playing (B|...|| sent).
+While they were deciding their moves, connected Client 3 (UserC) and Client 4 (UserD).
+Client 3 got W|1|| and waited.
+Client 4 got W|1||.
+Clients 3 and 4 immediately got paired (B|...|| sent to them) and could play their own game, completely separate from Clients 1 and 2. Showed the fork() was isolating games properly.
+
+Duplicate Login:
+Connected Client 1 as "CoolDude". Got W|1||, started waiting.
+Connected Client 2 also as "CoolDude".
+Client 2 immediately received R|L|Logged in|| and was disconnected. Worked as expected.

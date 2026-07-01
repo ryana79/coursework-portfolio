@@ -1,0 +1,274 @@
+% Ryan Amir
+% 3814
+% Section C1
+% Math 250 MATLAB Lab Assignment #5
+format compact
+% Question 1
+% Question 1 (a)
+eigshow
+% Question 1 (ai)
+% A has one positive eigenvalue
+% Question 1 (aii)
+% A has one negative eigenvalue
+% Question 1 (aiii)
+% The eigenvector x has about a length of 1, and the vector Ax has about a length of 1.5.
+% The equation Ax=λx suggests that for the positive eigenvalue, we estimate it to be around 1.5.
+% This comes from seeing that Ax is about 1.5 times bigger than x. For the negative eigenvalue, since
+% Ax looks to be one-third the size of x but in the opposite direction, we guess the negative eigenvalue 
+% to be -1/3.
+% Question 1 (bi)
+% No lines passing through the origin simultaneously include both Ax and x.
+% Question 1 (bii)
+% A lacks real eigenvectors and eigenvalues because there are no visual instances where Ax and x are 
+% aligned or directly opposite each other.
+% Question 2 
+A = [1 3; 4 2]/4
+A =
+    0.2500    0.7500
+    1.0000    0.5000
+% Question 2 (a)
+syms t; I = eye(2); p = det(A - t*I)
+p =
+t^2 - (3*t)/4 - 5/8
+% det(A) = (0.25*0.5)-(0.75*1) = (0.125)-(0.75) = -0.625 = -5/8, and is equal to the constant
+% term in p(t)
+% Question 2 (b)
+solve(p)
+ans =
+-1/2
+ 5/4
+% The true values are fairly close to the estimated ones from the graph. This is observed
+% when comparing the estimated values of 1.5 and -0.33 with the actual values of 1.25 and -0.5.
+% Question 2 (c)
+A = [3 1 ; -2 4 ]/4
+A =
+    0.7500    0.2500
+   -0.5000    1.0000
+syms t; I = eye(2); p = det(A - t*I)
+p = 
+t^2 - (7*t)/4 + 7/8
+solve(p)
+ans =
+7/8 - (7^(1/2)*1i)/8
+(7^(1/2)*1i)/8 + 7/8
+% The eigenvalues of A are not real numbers but imaginary ones. As noted in Question 1(b),
+% A lacks real eigenvectors and eigenvalues, which has been confirmed by determining the
+% roots of the characteristic polynomial.
+% Question 3
+rand('seed', 3814)
+% Question 3 (a)
+A = rmat(3,3), z = eig(A) - real(eig(A))
+A =
+     2     5     3
+     2     0     8
+     4     0     3
+z =
+   0.0000 + 0.0000i
+   0.0000 + 3.4404i
+   0.0000 - 3.4404i
+syms t; I = eye(3); p = det(A - t*I)
+p =
+- t^3 + 5*t^2 + 16*t + 130
+ figure; ezplot(p, [-10, 10]), grid
+figure; ezplot(p, [-10, 20]), grid
+% Approximate roots for p(t) are -2, 2, and 8.
+% Question 3 (b)
+[P D] = eig(A)
+P =
+  -0.6582 + 0.0000i  -0.2673 - 0.5734i  -0.2673 + 0.5734i
+  -0.5888 + 0.0000i   0.6453 + 0.0000i   0.6453 + 0.0000i
+  -0.4692 + 0.0000i  -0.0788 + 0.4209i  -0.0788 - 0.4209i
+D =
+   8.6112 + 0.0000i   0.0000 + 0.0000i   0.0000 + 0.0000i
+   0.0000 + 0.0000i  -1.8056 + 3.4404i   0.0000 + 0.0000i
+   0.0000 + 0.0000i   0.0000 + 0.0000i  -1.8056 - 3.4404i
+% The diagonal entris of D (real eigenvalues of A) are very similar to the graphical
+% roots estimate of p(t)
+p1 = P(:,1), p2 = P(:,2), p3 = P(:,3)
+p1 =
+   -0.6582
+   -0.5888
+   -0.4692
+p2 =
+  -0.2673 - 0.5734i
+   0.6453 + 0.0000i
+  -0.0788 + 0.4209i
+p3 =
+  -0.2673 + 0.5734i
+   0.6453 + 0.0000i
+  -0.0788 - 0.4209i
+A*p1 - D(1,1)*p1, A*p2 - D(2,2)*p2, A*p3 - D(3,3)*p3
+ans =
+   1.0e-14 *
+    0.7994
+   -0.0888
+   -0.1776
+ans =
+   1.0e-14 *
+   0.1776 + 0.2554i
+   0.4219 + 0.5329i
+   0.0000 - 0.0888i
+ans =
+   1.0e-14 *
+   0.1776 - 0.2554i
+   0.4219 - 0.5329i
+   0.0000 + 0.0888i
+% Theorem 5.2 states that a square matrix A (size nxn) can be diagonalized if there exists
+% a set of eigenvectors of A that forms a basis for R^n. Moreover, A can be expressed as
+% A = PDP^-1, where D is a diagonal matrix and P is an invertible matrix, precisely when the columns
+% columns of P form a basis of eigenvectors for R^n and the diagonal elements of D are the 
+% eigenvalues associated with the eigenvectors in P. Thus, the calculations confirm that the
+% columns of P serve as a basis of eigenvectors for R^n, with the diagonal elements of D as 
+% the corresponding eigenvalues.
+% Question 3 (c)
+A = P*D*inv(P)
+A =
+   2.0000 + 0.0000i   5.0000 - 0.0000i   3.0000 + 0.0000i
+   2.0000 + 0.0000i  -0.0000 - 0.0000i   8.0000 + 0.0000i
+   4.0000 + 0.0000i  -0.0000 - 0.0000i   3.0000 + 0.0000i
+% A^5 = P * D^5 * P^-1
+% A^10 = P * D^10 * P^-1 
+A^5
+ans =
+   1.0e+04 *
+   1.8732 + 0.0000i   1.0680 - 0.0000i   2.6743 + 0.0000i
+   1.7552 + 0.0000i   0.9480 - 0.0000i   2.2898 + 0.0000i
+   1.3524 + 0.0000i   0.8300 - 0.0000i   1.7963 + 0.0000i
+P*D^5*inv(P)
+ans =
+   1.0e+04 *
+   1.8732 + 0.0000i   1.0680 - 0.0000i   2.6743 + 0.0000i
+   1.7552 + 0.0000i   0.9480 - 0.0000i   2.2898 + 0.0000i
+   1.3524 + 0.0000i   0.8300 - 0.0000i   1.7963 + 0.0000i
+A^10
+ans =
+   1.0e+09 *
+   0.9000 + 0.0000i   0.5233 - 0.0000i   1.2259 + 0.0000i
+   0.8048 + 0.0000i   0.4674 - 0.0000i   1.0978 + 0.0000i
+   0.6419 + 0.0000i   0.3722 - 0.0000i   0.8744 + 0.0000i
+P*D^10*inv(P)
+ans =
+   1.0e+09 *
+   0.9000 + 0.0000i   0.5233 - 0.0000i   1.2259 + 0.0000i
+   0.8048 + 0.0000i   0.4674 - 0.0000i   1.0978 + 0.0000i
+   0.6419 + 0.0000i   0.3722 - 0.0000i   0.8744 + 0.0000i
+% Question 4
+% Question 4 (a)
+A = eye(2); B = rand(2);
+A(:,1) = B(:,1)/sum(B(:,1)); A(:,2) = B(:,2)/sum(B(:,2))
+A =
+    0.2309    0.5103
+    0.7691    0.4897
+[1 1]*A
+ans =
+     1     1
+% Expanding the calculation, we observe that multiplying [1 1] by matrix A yields a matrix
+% with elements [(A(1,1) + A(2,1)) (A(2,1)+A(2,2))], where each element in the resultant
+% matrix is the sum of the respective column entries in A. Hence, given that these sums are
+% equal to 1, it demonstrates that A qualifies as a transition matrix.
+% Question 4 (b)
+u = nulbasis(A - eye(2)), v = u/sum(u)
+u =
+    0.6634
+    1.0000
+v =
+    0.3988
+    0.6012
+A*v
+ans =
+    0.3988
+    0.6012
+v
+v =
+    0.3988
+    0.6012
+figure; plot([0,v(1)], [0, v(2)]), hold on
+% Question 4 (c)
+w = rand(2,1), p = w/sum(w)
+w =
+    0.8247
+    0.7783
+p =
+    0.5145
+    0.4855
+p = A*p, plot([0,p(1)], [0, p(2)], ':'), hold on
+p =
+    0.3665
+    0.6335
+p = A*p, plot([0,p(1)], [0, p(2)], ':'), hold on
+p =
+    0.4079
+    0.5921
+p = A*p, plot([0,p(1)], [0, p(2)], ':'), hold on
+p =
+    0.3963
+    0.6037
+p = A*p, plot([0,p(1)], [0, p(2)], ':'), hold on
+p =
+    0.3995
+    0.6005
+% Question 5
+% Question 5 (a)
+A = [0.4, 0.2, 0.2; 0.1, 0.7, 0.2; 0.5, 0.1, 0.6]
+A =
+    0.4000    0.2000    0.2000
+    0.1000    0.7000    0.2000
+    0.5000    0.1000    0.6000
+u = [1, 1, 1]
+u =
+     1     1     1
+u*A
+ans =
+     1     1     1
+% Question 5 (b)
+p = [0.5;0.3;0.2]
+p =
+    0.5000
+    0.3000
+    0.2000
+u*p
+ans =
+     1
+A*p
+ans =
+    0.3000
+    0.3000
+    0.4000
+% After one year, City: 30%, Suburbs: 30%, Country: 40%
+(A^2)*p
+ans =
+    0.2600
+    0.3200
+    0.4200
+% After two years, City: 26%, Suburbs: 32%, Country: 42%
+(A^3)*p
+ans =
+    0.2520
+    0.3340
+    0.4140
+% After three years, City: 25.2%, Suburbs: 33.4%, Country: 41.4%
+(A^5)*p
+ans =
+    0.2501
+    0.3459
+    0.4041
+% After five years, City: 25.01%, Suburbs: 34.59%, Country: 40.41%
+(A^8)*p
+ans =
+    0.2500
+    0.3495
+    0.4005
+% After eight years, City: 25%, Suburbs: 34.95%, Country: 40.05%
+% Question 5 (c)
+u = nulbasis(A - eye(3)), v = u/sum(u)
+u =
+    0.6250
+    0.8750
+    1.0000
+v =
+    0.2500
+    0.3500
+    0.4000
+% The vector v closely matches the population distribution vector, indicating that the
+% population will resemble this distribution after 8 years. Specifically, v = [0.25, 0.35, 0.40]
+% is almost the same as (A^8) * p = [0.2500, 0.3495, 0.4005].

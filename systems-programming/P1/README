@@ -1,0 +1,81 @@
+Project 1: My Little Malloc() - READ ME
+Authors: Ryan Amir, Gian Cases
+NetID's: rma167 , grc74
+
+Course: CS 214 Spring 2025
+
+Overview: This project implements custom versions of malloc() and free(), renamed as mymalloc() and myfree(). The goal was to create our own memory allocator that not only handles memory allocation and deallocation, but also detects common errors (such as invalid frees, double frees, and memory leaks). Our implementation ensures 8-byte alignment, supports chunk splitting and coalescing to minimize fragmentation, and includes error reporting that specifies the source file and line number.
+
+File Structure:
+mymalloc.c - Contains the implementation of our custom memory allocator. It manages a fixed-size heap, handles allocation requests with a best-fit strategy, splits oversized free chunks, and coalesces adjacent free blocks.
+mymalloc.h - The header file with the required macros and function prototypes. It automatically redirects calls from malloc() and free() to our custom implementations. • memgrind.c - A stress test program that runs a series of five memory workloads 50 times, reporting the average execution time.
+memtest.c - Tests the correctness of our allocator by allocating objects, writing unique byte patterns into them, and verifying that the data remains unchanged.
+test_mymalloc.c - Contains several targeted tests including basic allocation/free, invalid pointer handling, double free detection, alignment verification, heap exhaustion, and fragmentation handling. (Some tests that intentionally cause errors are commented out to avoid early termination.)
+
+Compilation Instructions:
+
+Open a terminal in the project directory.
+Run the command: make (This builds: memgrind, memtest)
+To clean up the build, run: make clean
+To compile test_mymalloc.c, run:
+gcc -Wall -Werror -std=c99 -g -o test_mymalloc test_mymalloc.c mymalloc.c
+This creates the executable ./test_mymalloc
+
+Running the Tests:
+
+memgrind:
+
+Description: Stress-tests the allocator using various workloads: 
+a. Repeatedly allocating and immediately freeing a 1-byte object.
+b. Allocating 120 1-byte objects before freeing them. 
+c. Performing a mix of random allocations and frees. 
+d. Simulating a linked list by creating and then freeing nodes. 
+e. Simulating a binary tree by building and then tearing down the structure. The workload is repeated 50 times to calculate the average execution time.
+How to run: ./memgrind
+
+memtest:
+
+Description: Tests memory integrity by: 
+• Allocating a fixed number of objects. 
+• Filling each object with a unique byte pattern. 
+• Verifying that the correct data is kept in each allocated block.
+How to run: ./memtest
+
+test_mymalloc:
+
+Description: Runs several tests to verify: 
+• Basic malloc and free operations. 
+• Error detection for invalid frees (freeing pointers not returned by malloc). 
+• Detection of double free errors. 
+• Proper splitting and coalescing of free chunks. 
+• Correct pointer alignment. 
+• Handling of heap exhaustion and fragmentation. Note: Tests that intentionally trigger errors, like invalid free and double free are commented out by default. Uncomment them if you would like to see the error handling in action.
+How to run: ./test_mymalloc
+
+Test Plan and Design Notes: Memory Management:
+
+Our allocator uses a fixed 4096-byte heap with enforced 8-byte alignment (using a union for proper alignment).
+Each memory block (chunk) includes a header (storing the block size and free/allocated status) and a payload.
+We use a best-fit strategy to select free chunks. When a free chunk is larger than needed, it is split to reduce wasted space. Adjacent free chunks are merged (coalesced) to reduce fragmentation.
+
+Error Handling:
+
+The implementation checks for improper usage, including: 
+• Freeing pointers not returned by malloc. 
+• Freeing pointers that are not at the start of a chunk. 
+• Double frees.
+When an error is detected, an informative error message (including the source file and line number) is printed, and the program exits with status 2.
+A leak detection function, registered with atexit(), reports any unfreed memory when the program terminates.
+
+Testing:
+
+Correctness Testing: 
+• test_mymalloc.c verifies basic allocation/deallocation, error detection, proper splitting/coalescing, and pointer alignment. 
+• memtest.c ensures that memory content remains intact by checking unique byte patterns.
+
+Stress Testing: 
+• memgrind.c simulates realistic allocation patterns and operations (including linked list and binary tree manipulations) to test performance and stability under heavy load.
+
+Additional Design Considerations:
+The macros in mymalloc.h ensure that all calls to malloc() and free() in client code are automatically redirected to our custom functions.
+The design strictly follows the project specifications, ensuring all required features (error checks, coalescing, alignment, leak detection) are implemented.

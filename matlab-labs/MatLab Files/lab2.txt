@@ -1,0 +1,344 @@
+format compact
+% Ryan Amir
+% 3814
+% Section C1
+% Math 250 MATLAB Lab Assignment #2
+format short
+rand('seed', 3814)
+% Question 1 (a)
+A = rmat(3, 5), rank(A(:,1:3))
+A =
+     2     5     3     2     7
+     2     0     8     8     8
+     4     0     3     7     7
+ans =
+     3
+b = rvect(3), R = rref([A b])
+b =
+     1
+     1
+     7
+R =
+    1.0000         0         0    1.2308    1.2308    2.0385
+         0    1.0000         0   -0.5077    0.4923   -0.3846
+         0         0    1.0000    0.6923    0.6923   -0.3846
+S = R(:,1:5)
+S =
+    1.0000         0         0    1.2308    1.2308
+         0    1.0000         0   -0.5077    0.4923
+         0         0    1.0000    0.6923    0.6923
+rref(A)
+ans =
+    1.0000         0         0    1.2308    1.2308
+         0    1.0000         0   -0.5077    0.4923
+         0         0    1.0000    0.6923    0.6923
+% Question 1 (ai)
+% Columns 1, 2, and 3 are pivot columns of S
+% Question 1 (aii)
+% The rank of R is 3 and the Rank of A is also 3
+% Question 1 (aiii)
+% The nullity of A is 2, x4 and x5 are free varaibles
+% Question 1 (aiv)
+% The equation Ax=b has a solution because b can be expressed as a linear combination of the columns of A
+% Question 1 (b)
+c = R(:,6)
+c =
+    2.0385
+   -0.3846
+   -0.3846
+x = [c; 0; 0]
+x =
+    2.0385
+   -0.3846
+   -0.3846
+         0
+         0
+% Question 1 (bi)
+A*x - b
+ans =
+   1.0e-15 *
+   -0.6661
+   -0.4441
+   -0.8882
+S*x - c
+ans =
+     0
+     0
+     0
+% Question 1 (bii)
+% When we perform row reduction on the augmented matrices [A|b] and [S|c], we are essentially transforming
+% the systems of linear equations into an equivalent form where the coefficient matrices A and S become row
+% equivalent in the identity matrix, indicating the existance of pivots in each column. Each column in the
+% coefficient matrix contributes to the equations in such a way that they are satisfied by a unique solution,
+% vector x.
+% Question 1 (c)
+u = [-S(:,4); 1; 0], v = [-S(:,5);0;1]
+u =
+   -1.2308
+    0.5077
+   -0.6923
+    1.0000
+         0
+v =
+   -1.2308
+   -0.4923
+   -0.6923
+         0
+    1.0000
+% Question 1 (ci)
+% In the vector form of the general solution to Ax=0, u and v emerge as representations of the free variables within the system.
+% Specifically, u corresponds to the fourth non-pivot column of A, while v corresponds to the fifth non-pivot column, with additional elements 
+% 1 and 0, ensuring proper alignment with the variables. Together, u and v contribute to the comprehensive solution space, encompassing both
+% pivot and free variables, portraying the full solution to the system.
+S*u, A*u, S*v, A*v
+ans =
+     0
+     0
+     0
+ans =
+     0
+     0
+     0
+ans =
+     0
+     0
+     0
+ans =
+     0
+     0
+     0
+s = rand(1), t = rand(1), y = s*u + t*v
+s =
+    0.1271
+t =
+    0.9568
+y =
+   -1.3340
+   -0.4065
+   -0.7504
+    0.1271
+    0.9568
+% Question 1 (cii)
+% The property that ensures Ay=0 is linearity, specifically the property that matrices 
+% When A is multiplied by y, the resulting vector Ay is a linear combination of the columns of A.
+% If this combination equals zero, it implies that the vectors in 
+% y belong to the null space of A, ensuring Ay=0.
+A*y
+ans =
+     0
+     0
+     0
+% Question 1 (d)
+z = x + y
+z =
+    0.7044
+   -0.7911
+   -1.1350
+    0.1271
+    0.9568
+% The property referred to here is the compatibility of matrix and vector dimensions for
+% multiplication, combined with the condition that the resulting vector b satisfies the equation Az=b.
+A*z-b
+ans =
+   1.0e-14 *
+   -0.0888
+   -0.1776
+   -0.0888
+% Question 2
+u1 = rvect(3), u2 = rvect(3), u3 = rvect(3), u4 = rvect(3)
+u1 =
+     1
+     3
+     8
+u2 =
+     4
+     1
+     8
+u3 =
+     2
+     0
+     7
+u4 =
+     0
+     6
+     5
+% Question 2 (a)
+A = [u1 u2 u3], rref(A)
+A =
+     1     4     2
+     3     1     0
+     8     8     7
+ans =
+     1     0     0
+     0     1     0
+     0     0     1
+% Question 2 (ai)
+% The equation Ax=0 has 0 free variables because each column has a pivot position
+% Question 2 (aii)
+% The set S is linearly independent because no vector in S can be written as a linear combination of the others.
+% Question 2 (b)
+B = [u1 u2 u3 u4], rref(B)
+B =
+     1     4     2     0
+     3     1     0     6
+     8     8     7     5
+ans =
+    1.0000         0         0    1.8222
+         0    1.0000         0    0.5333
+         0         0    1.0000   -1.9778
+% Question 2 (bi)
+% The equation Bx=0 has 1 free variable
+% Question 2 (bii)
+% The set T is linearly dependent
+% Question 2 (c)
+v = rand(1)*u1 + rand(1)*u2
+v =
+    2.3180
+    1.5806
+    6.8203
+% Without calculation, the set U is linearly dependent if the vector v can be expressed as a linear combination of 
+% u1 and u2 alone. If v can be written as c1u1+c2u2, then U is linearly dependent.
+U = [u1 u2 v], rref(U)
+U =
+    1.0000    4.0000    2.3180
+    3.0000    1.0000    1.5806
+    8.0000    8.0000    6.8203
+ans =
+    1.0000         0    0.3640
+         0    1.0000    0.4885
+         0         0         0
+% Question 3
+A = rmat(2,3), B = rmat(3, 4), C = rmat(4,3), v = rvect(4)
+A =
+     1     9     9
+     5     5     1
+B =
+     7     3     3     1
+     9     8     5     7
+     5     2     9     8
+C =
+     0     8     0
+     9     3     0
+     8     2     4
+     3     3     7
+v =
+     4
+     4
+     0
+     5
+% Question 3 (a)
+u = B*v, A*u, D = A*B, D*v
+u =
+    45
+   103
+    68
+ans =
+        1584
+         808
+D =
+   133    93   129   136
+    85    57    49    48
+ans =
+        1584
+         808
+A*(B*C), (A*B)*C
+ans =
+        2277        2009        1468
+        1049        1093         532
+ans =
+        2277        2009        1468
+        1049        1093         532
+% Question 3 (b)
+A = [0 1; 0 0], B = [0 0; 1 0], C = [0 1; 1 0]
+A =
+     0     1
+     0     0
+B =
+     0     0
+     1     0
+C =
+     0     1
+     1     0
+% Question 3 (bi)
+% No, AB is not = to BA because matrix multiplication is not commutative.
+% (A+B)^2= A^2+2AB+B^2 is only valid if AB=BA in a special case
+% Question 3 (bii)
+A^2
+ans =
+     0     0
+     0     0
+% IF A were a number instead of a matrix, A^2 would represent the square of that number.
+% However in this case A^2 represents the result of matrix multiplcation and it doesnt
+% directly correlate with the value of A.
+% Question 3 (biii)
+A*C
+ans =
+     1     0
+     0     0
+A*B
+ans =
+     1     0
+     0     0
+% In this case AC=AB implying that products of AC and AB are equal. However, this doesn't
+% mean that matrices C and B are equal since in the context of matrices,
+% the equality of products does not always imply the equality of factors involved.
+% Question 4
+A = [0,0,0,1,0,1;1,0,1,1,0,0;0,1,0,1,0,0;1,0,1,0,0,0;1,1,1,0,0,1;0,0,1,1,0,0]
+A =
+     0     0     0     1     0     1
+     1     0     1     1     0     0
+     0     1     0     1     0     0
+     1     0     1     0     0     0
+     1     1     1     0     0     1
+     0     0     1     1     0     0
+% Question 4 (i)
+% Uploaded along with assignment
+% Question 4 (ii)
+% Person 5 cannot receive messages from anyone. You can tell from the directed graph because
+% no arrow points to vertice 5. You can tell from the matrice as well since column 5 is all 0.
+% Question 4 (iii)
+A
+A =
+     0     0     0     1     0     1
+     1     0     1     1     0     0
+     0     1     0     1     0     0
+     1     0     1     0     0     0
+     1     1     1     0     0     1
+     0     0     1     1     0     0
+A^2
+ans =
+     1     0     2     1     0     0
+     1     1     1     2     0     1
+     2     0     2     1     0     0
+     0     1     0     2     0     1
+     1     1     2     4     0     1
+     1     1     1     1     0     0
+A^3
+ans =
+     1     2     1     3     0     1
+     3     1     4     4     0     1
+     1     2     1     4     0     2
+     3     0     4     2     0     0
+     5     2     6     5     0     1
+     2     1     2     3     0     1
+A^4
+ans =
+     5     1     6     5     0     1
+     5     4     6     9     0     3
+     6     1     8     6     0     1
+     2     4     2     7     0     3
+     7     6     8    14     0     5
+     4     2     5     6     0     2
+% Person 1 can send a message to Person 4, 1 way in stage 1, 1 way in 2 stages, 3 ways in 3 stages, and 5 ways in 4 stages
+% This is because A(1,4) = 1, A^2(1,4) = 1, A^3(1,4) = 3, A^4(1,4) = 5
+% Question 4 (iv)
+B = A+A^2+A^3+A^4
+B =
+     7     3     9    10     0     3
+    10     6    12    16     0     5
+     9     4    11    12     0     3
+     6     5     7    11     0     4
+    14    10    17    23     0     8
+     7     4     9    11     0     3
+% In 12 ways person 3 can send a message to person 4 in at most 4 stages because
+% The (3,4) entry of B shows the sum of each (3,4) entry of stages 1 to 4.

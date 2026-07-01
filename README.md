@@ -38,27 +38,35 @@ Python and notebook-based coursework covering log processing, data cleaning, str
 
 OCaml coursework covering functional programming, parsing, interpreters, language semantics, and an IMP interpreter.
 
-- [Course repository](https://github.com/ryana79/Principles-of-Programming-Languages)
+- [Course folder](principles-programming-languages/)
+- [IMP interpreter](principles-programming-languages/assignment3/assignment3/)
+- [Parsing project](principles-programming-languages/Parsing-main/)
+- [Type inference project](principles-programming-languages/TypeInference-main/)
 
 ### Systems Programming
 
 C systems coursework covering memory management, file processing, shell behavior, networking, low-level debugging, and Unix-style programming.
 
-- [Course repository](https://github.com/ryana79/Systems-Programming)
+- [Course folder](systems-programming/)
+- [Custom memory allocator](systems-programming/P1/)
+- [Word frequency analyzer](systems-programming/P2/)
+- [Shell implementation](systems-programming/P3/)
+- [Networked rock-paper-scissors server](systems-programming/p4/)
 
 ### MATLAB Labs
 
 MATLAB lab coursework focused on technical computing, numerical workflows, plotting, and engineering-style data analysis.
 
-- [Course repository](https://github.com/ryana79/MATLAB)
+- [Course folder](matlab-labs/)
+- [MATLAB files](matlab-labs/MatLab%20Files/)
 
 ## Highlighted Projects
 
 - [Online Travel Reservation System](https://github.com/ryana79/online-travel-reservation-system) - Java Swing and MySQL database application for travel reservations.
 - [CS 210 Stock Project](https://github.com/ryana79/cs210-stock-project) - End-to-end stock market data pipeline with SQLite, EDA, validation, and machine learning.
-- [Principles of Programming Languages](https://github.com/ryana79/Principles-of-Programming-Languages) - OCaml coursework in functional programming, parsing, and interpreter implementation.
-- [Systems Programming](https://github.com/ryana79/Systems-Programming) - C coursework covering memory allocation, file processing, shells, and network programming.
-- [MATLAB Labs](https://github.com/ryana79/MATLAB) - MATLAB coursework and technical computing labs.
+- [Principles of Programming Languages](principles-programming-languages/) - OCaml coursework in functional programming, parsing, and interpreter implementation.
+- [Systems Programming](systems-programming/) - C coursework covering memory allocation, file processing, shells, and network programming.
+- [MATLAB Labs](matlab-labs/) - MATLAB coursework and technical computing labs.
 
 ## Notes
 
