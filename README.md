@@ -1,6 +1,6 @@
 # Coursework Portfolio
 
-Selected coursework from Rutgers computer science classes, organized to highlight algorithmic reasoning, relational database design, SQL, data cleaning, and data science workflows.
+Selected coursework from Rutgers computer science classes, organized to highlight algorithmic reasoning, systems programming, programming language concepts, relational database design, SQL, data cleaning, MATLAB labs, and data science workflows.
 
 This repository intentionally includes curated student-authored work rather than complete course folders. Large course-provided materials, generated files, virtual environments, and duplicate project source trees are excluded.
 
@@ -34,10 +34,31 @@ Python and notebook-based coursework covering log processing, data cleaning, str
 - [Micro-Skills Lab 1: Python Basics](data-management-data-science/micro-skills-lab-01-python-basics/python-basics.ipynb)
 - [Course project repository](data-management-data-science/project-link.md)
 
+### Principles of Programming Languages
+
+OCaml coursework covering functional programming, parsing, interpreters, language semantics, and an IMP interpreter.
+
+- [Course repository](https://github.com/ryana79/Principles-of-Programming-Languages)
+
+### Systems Programming
+
+C systems coursework covering memory management, file processing, shell behavior, networking, low-level debugging, and Unix-style programming.
+
+- [Course repository](https://github.com/ryana79/Systems-Programming)
+
+### MATLAB Labs
+
+MATLAB lab coursework focused on technical computing, numerical workflows, plotting, and engineering-style data analysis.
+
+- [Course repository](https://github.com/ryana79/MATLAB)
+
 ## Highlighted Projects
 
 - [Online Travel Reservation System](https://github.com/ryana79/online-travel-reservation-system) - Java Swing and MySQL database application for travel reservations.
 - [CS 210 Stock Project](https://github.com/ryana79/cs210-stock-project) - End-to-end stock market data pipeline with SQLite, EDA, validation, and machine learning.
+- [Principles of Programming Languages](https://github.com/ryana79/Principles-of-Programming-Languages) - OCaml coursework in functional programming, parsing, and interpreter implementation.
+- [Systems Programming](https://github.com/ryana79/Systems-Programming) - C coursework covering memory allocation, file processing, shells, and network programming.
+- [MATLAB Labs](https://github.com/ryana79/MATLAB) - MATLAB coursework and technical computing labs.
 
 ## Notes
 
